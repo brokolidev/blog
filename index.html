@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full antialiased dark">
+<html lang="en" class="h-full antialiased dark" data-lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,13 +48,25 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Theme Initialization -->
+  <!-- Language & Theme Initialization (Zero Flash) -->
   <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    var savedLang = localStorage.getItem('lang');
+    var activeLang = 'ko';
+    if (savedLang === 'ko' || savedLang === 'en') {
+      activeLang = savedLang;
+    } else {
+      var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+      if (navLang && !navLang.startsWith('ko') && navLang.startsWith('en')) {
+        activeLang = 'en';
+      }
+    }
+    document.documentElement.setAttribute('data-lang', activeLang);
   </script>
 
   <!-- Structured Data (JSON-LD) -->
@@ -100,7 +112,7 @@
           <span>brokoli<span class="text-accent">.dev</span></span>
         </a>
 
-        <!-- Navigation Links & Theme Toggle -->
+        <!-- Navigation Links, Language Switcher & Theme Toggle -->
         <nav class="header-nav">
           <a href="https://brokolidev.com" class="nav-tab-inactive">
             <span>Profile</span>
@@ -108,6 +120,13 @@
           <a href="/" class="nav-tab-active">
             <span>Blog</span>
           </a>
+
+          <!-- Language Switcher in Header -->
+          <div class="lang-switch-group" role="group" aria-label="Language selection">
+            <button type="button" class="lang-btn" data-set-lang="ko" title="한국어로 전환">KR</button>
+            <span class="lang-sep">/</span>
+            <button type="button" class="lang-btn" data-set-lang="en" title="Switch to English">EN</button>
+          </div>
 
           <!-- Theme Toggle -->
           <button type="button" id="theme-toggle" aria-label="Toggle theme" class="theme-btn">
@@ -128,24 +147,29 @@
           <div class="year-block" id="year-2026">
             <div class="year-heading">
               <span class="year-title">2026</span>
-              <span class="year-count-badge">2</span>
+              <span class="year-count-badge">1</span>
               <div class="year-divider"></div>
               <button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>
             </div>
 
             <div class="entries-list">
               
-              <div class="log-item" data-slug="zero-cost-serverless-blog-architecture">
+              <div class="log-item" data-slug="curiosity-and-new-home">
                 <div class="log-summary">
                   <div class="log-summary-left">
                     <span class="log-date">10.08 <span style="font-size: 0.72rem; opacity: 0.75;">THU</span></span>
-                    <span class="log-title">Zero-Cost Serverless Tech Blog with Markdown & Cloudflare Pages</span>
+                    
+                    <span class="log-title lang-ko">관심사가 많은 사람의 새로운 보금자리</span>
+                    <span class="log-title lang-en">A New Sanctuary for a Curious Mind</span>
+
                     <div class="log-tags">
-                      <span class="log-tag">Cloud & DevOps</span>
+                      <span class="log-tag lang-ko">Essay</span>
+                      <span class="log-tag lang-en">Essay</span>
                     </div>
                   </div>
                   <div class="log-summary-right">
-                    <span class="log-readtime">4 min read</span>
+                    <span class="log-readtime lang-ko">1 min</span>
+                    <span class="log-readtime lang-en">1 min</span>
                     <i class="fas fa-chevron-down log-chevron"></i>
                   </div>
                 </div>
@@ -153,176 +177,36 @@
                 <div class="log-content">
                   <div class="log-meta-strip">
                     <div>
-                      <span>Full Date: <strong>2026-10-09</strong></span>
+                      <span>Date: <strong>2026-10-08</strong></span>
                       <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
-                      <span>Tags: #Cloudflare #SSG #Markdown #Architecture</span>
+                      <span class="lang-ko">Tags: #Essay #Blogging #Life</span>
+                      <span class="lang-en">Tags: #Essay #Blogging #Life</span>
                     </div>
-                    <button type="button" class="log-permalink-btn" data-slug="zero-cost-serverless-blog-architecture" title="Copy shareable link">
-                      <i class="fas fa-link"></i> Link
-                    </button>
-                  </div>
-
-                  <div class="prose-content">
-                    <h2>Why Ditch Heavy Content Management Systems?</h2>
-<p>For years, developers defaulted to hosting traditional CMS platforms like WordPress or Ghost. While capable, they introduce unnecessary operational overhead:</p>
-<ul>
-<li><strong>Database Maintenance</strong>: Upgrades, automated backups, and connection pooling.</li>
-<li><strong>Security Vulnerabilities</strong>: Routine SQL injection vectors and plugin exploits.</li>
-<li><strong>Idle Server Costs</strong>: Paying $5 to $20/month for virtual machines just to serve a few kilobytes of text.</li>
-</ul>
-<p>By converting raw Markdown into pre-rendered static HTML via a custom Static Site Generator (SSG), every single article is served straight from global CDN edge caches in under <strong>15 milliseconds</strong>.</p>
-<hr>
-<h2>High-Level Architecture Overview</h2>
-<p>Here is how our zero-friction publishing pipeline operates:</p>
-<pre><code class="language-text">[Markdown Article]  ➔  [Node / Bun SSG Builder]  ➔  [GitHub Actions CI/CD]  ➔  [Cloudflare Pages CDN]
- (content/posts/)        (Parses Frontmatter)         (Runs on Git Push)         (Sub-20ms Global Edge)</code></pre><h3>Key Architectural Benefits</h3>
-<ol>
-<li><strong>Unlimited Free Bandwidth</strong>: Unlike competitors with strict 100GB/month bandwidth caps, Cloudflare Pages provides unlimited traffic on its Free Tier.</li>
-<li><strong>Zero Database Dependencies</strong>: The entire blog state is version-controlled directly inside Git.</li>
-<li><strong>Conversational AI Publishing</strong>: Whenever inspiration strikes, prompts generate fresh Markdown files, test them locally, and trigger automatic deployments.</li>
-</ol>
-<hr>
-<h2>The SSG Build Pipeline</h2>
-<p>Below is the lightweight Node.js transformation script that converts raw Markdown into production-ready static pages:</p>
-<pre><code class="language-javascript"><span class="token keyword">import</span> fs <span class="token keyword">from</span> <span class="token string">'fs-extra'</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> frontMatter <span class="token keyword">from</span> <span class="token string">'front-matter'</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token punctuation">{</span> marked <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'marked'</span><span class="token punctuation">;</span>
-
-<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">buildStaticSite</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> files <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readdir</span><span class="token punctuation">(</span><span class="token string">'./content/posts'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> file <span class="token keyword">of</span> files<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> rawContent <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">./content/posts/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>file<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> <span class="token punctuation">{</span> attributes<span class="token punctuation">,</span> body <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">frontMatter</span><span class="token punctuation">(</span>rawContent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> htmlBody <span class="token operator">=</span> <span class="token function">marked</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">// Inject into clean semantic template</span>
-    <span class="token keyword">const</span> fullHtml <span class="token operator">=</span> <span class="token function">renderTemplate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token operator">...</span>attributes<span class="token punctuation">,</span> <span class="token literal-property property">body</span><span class="token operator">:</span> htmlBody <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">outputFile</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">./dist/posts/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>attributes<span class="token punctuation">.</span>slug<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.html</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> fullHtml<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre><hr>
-<h2>Conclusion &amp; Next Steps</h2>
-<p>This minimalist setup eliminates friction, guarantees high Lighthouse scores, and lets you focus on what truly matters: <strong>writing great technical content</strong>.</p>
-
-                  </div>
-                </div>
-              </div>
-              <div class="log-item" data-slug="autonomous-coding-agents-and-future-of-work">
-                <div class="log-summary">
-                  <div class="log-summary-left">
-                    <span class="log-date">10.07 <span style="font-size: 0.72rem; opacity: 0.75;">WED</span></span>
-                    <span class="log-title">Autonomous Coding Agents: Transforming Developer Velocity in 2026</span>
-                    <div class="log-tags">
-                      <span class="log-tag">AI & Automation</span>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                      <div class="post-lang-badge">
+                        <button type="button" data-post-lang="ko" title="한국어로 읽기">KR</button>
+                        <span style="opacity: 0.4;">/</span>
+                        <button type="button" data-post-lang="en" title="Read in English">EN</button>
+                      </div>
+                      <button type="button" class="log-permalink-btn" data-slug="curiosity-and-new-home" title="Copy shareable link">
+                        <i class="fas fa-link"></i> Link
+                      </button>
                     </div>
                   </div>
-                  <div class="log-summary-right">
-                    <span class="log-readtime">5 min read</span>
-                    <i class="fas fa-chevron-down log-chevron"></i>
-                  </div>
-                </div>
 
-                <div class="log-content">
-                  <div class="log-meta-strip">
-                    <div>
-                      <span>Full Date: <strong>2026-10-08</strong></span>
-                      <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
-                      <span>Tags: #AI #Autonomous Agents #Engineering #Productivity</span>
-                    </div>
-                    <button type="button" class="log-permalink-btn" data-slug="autonomous-coding-agents-and-future-of-work" title="Copy shareable link">
-                      <i class="fas fa-link"></i> Link
-                    </button>
-                  </div>
-
-                  <div class="prose-content">
-                    <h2>The Paradigm Shift: From Autocomplete to Delegation</h2>
-<p>In 2023, developers used AI primarily as an inline tab-completion assistant. By late 2026, the industry has fundamentally pivoted to <strong>Autonomous Goal-Oriented Agents</strong>.</p>
-<p>Rather than asking for small snippets, modern software engineering revolves around:</p>
-<blockquote>
-<p><em>&quot;Here is the specification. Write the database migrations, build the REST endpoints, update the UI components, run end-to-end regression tests, and submit a verified Git commit.&quot;</em></p>
-</blockquote>
-<hr>
-<h2>The Core Triad of Autonomous Development</h2>
-<p>To enable reliable agentic workflows without hallucinations, three architectural pillars are essential:</p>
-<ol>
-<li><strong>Deterministic Verification Loops</strong>:<ul>
-<li>Compiling source code (<code>py_compile</code>, <code>tsc</code>, <code>node --check</code>).</li>
-<li>Strict static type checkers (Pyright, MyPy, ESLint).</li>
-<li>Automated full-stack verification suites (<code>verify_all.sh</code>).</li>
-</ul>
-</li>
-<li><strong>Context-Aware Knowledge Repositories</strong>:<ul>
-<li>Giving agents structured memory about domain models, past design choices, and anti-patterns.</li>
-</ul>
-</li>
-<li><strong>Safe Submodule Isolation</strong>:<ul>
-<li>Developing micro-projects in dedicated repositories, avoiding monolithic sprawl while keeping workspace navigation seamless.</li>
-</ul>
-</li>
-</ol>
-<hr>
-<h2>Human as Architect &amp; Reviewer</h2>
-<p>As coding execution becomes automated, the developer&#39;s core role elevates to:</p>
-<ul>
-<li>Formulating accurate system abstractions.</li>
-<li>Identifying high-leverage business models and customer pains.</li>
-<li>Crafting beautiful user experiences that evoke emotional delight.</li>
-</ul>
-<p>The future of software belongs to engineers who can orchestrate fleets of specialized agents with precision and creativity.</p>
+                  <div class="prose-content lang-ko">
+                    <p>나는 관심사가 많다. 정치, 경제, 문화, 사회, 스포츠, 예술등 거의 전 분야가 나의 관심사라고 할 수 있겠다.</p>
+<p>어렸을때는 어려서 그런줄 알았는데 나이를 40을 넘게 먹어도 이 호기심과 지적 갈증은 해소가 되질 않으니 평생 이렇게 살아야 할래나부다.</p>
+<p>그 동안 나름대로 애써 블로그를 만들고 유지하려고 여러번 노력을 했었으나 직접 운영하는 블로그 특성상 여러가지 번거로운 일들이 많아 결국 네이버 블로그, 페이스북, 쓰레드등을 떠돌곤 했었다.</p>
+<p>이제는 너무나 쉽게 이렇게 고급진 집을 지을 수 있게 되었고 쉽게 서빙할 수 있으니 앞으로 그 모든 SNS에는 이 블로그의 링크만이 올라가게 될 것이다.</p>
 
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="year-block" id="year-2025">
-            <div class="year-heading">
-              <span class="year-title">2025</span>
-              <span class="year-count-badge">1</span>
-              <div class="year-divider"></div>
-              
-            </div>
+                  <div class="prose-content lang-en">
+                    <p>I have a wide range of interests. Politics, economics, culture, society, sports, art—almost every field fascinates me.</p>
+<p>When I was younger, I thought it was just youthful curiosity. But even well past the age of forty, this intellectual thirst hasn&#39;t faded. I suppose this is simply who I am, and how I will live for the rest of my life.</p>
+<p>Over the years, I made numerous attempts to create and maintain my own blog. But self-hosting came with endless maintenance headaches and friction, and I often found myself wandering across Naver Blog, Facebook, and Threads instead.</p>
+<p>Now, it has finally become effortless to build such an elegant home and serve it with ease. Going forward, all those social platforms will simply point here.</p>
 
-            <div class="entries-list">
-              
-              <div class="log-item" data-slug="infrastructure-standardization-docker">
-                <div class="log-summary">
-                  <div class="log-summary-left">
-                    <span class="log-date">11.19 <span style="font-size: 0.72rem; opacity: 0.75;">WED</span></span>
-                    <span class="log-title">Infrastructure Standardization with Multi-Container Docker</span>
-                    <div class="log-tags">
-                      <span class="log-tag">DevOps</span>
-                    </div>
-                  </div>
-                  <div class="log-summary-right">
-                    <span class="log-readtime">3 min</span>
-                    <i class="fas fa-chevron-down log-chevron"></i>
-                  </div>
-                </div>
-
-                <div class="log-content">
-                  <div class="log-meta-strip">
-                    <div>
-                      <span>Full Date: <strong>2025-11-20</strong></span>
-                      <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
-                      <span>Tags: #Docker #Nginx #Infrastructure</span>
-                    </div>
-                    <button type="button" class="log-permalink-btn" data-slug="infrastructure-standardization-docker" title="Copy shareable link">
-                      <i class="fas fa-link"></i> Link
-                    </button>
-                  </div>
-
-                  <div class="prose-content">
-                    <h2>Eliminating Environment Drift</h2>
-<p>Before unifying our stacks with Docker, onboarding new developers often took days due to mismatched PHP extensions, MySQL version mismatches, and varying local Nginx configurations.</p>
-<h3>Key Milestones Achieved</h3>
-<ul>
-<li><strong>One-Command Bootstrapping</strong>: <code>make up</code> spins up Nginx, PHP-FPM, Redis, and MySQL with pre-seeded test fixtures.</li>
-<li><strong>Isolated Network Topology</strong>: All internal services communicate through private bridge networks, exposing only necessary HTTP ports.</li>
-<li><strong>Deterministic CI Parity</strong>: The identical container definitions are utilized inside our automated test runner.</li>
-</ul>
-<pre><code class="language-bash"><span class="token comment"># Spin up reproducible development environment</span>
-<span class="token function">docker</span> compose up <span class="token parameter variable">-d</span> <span class="token parameter variable">--build</span></code></pre>
                   </div>
                 </div>
               </div>

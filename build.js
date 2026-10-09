@@ -77,12 +77,23 @@ function copyDirRecursive(src, dest) {
   }
 }
 
-// Helper: Format Date String
+// Helper: Format Date String safely without UTC timezone shift
 function parseDateParts(dateStr) {
-  const d = new Date(dateStr);
-  const year = d.getFullYear() || 2026;
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
+  const match = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  let year = 2026, month = '10', day = '08';
+  let d;
+  if (match) {
+    year = Number(match[1]);
+    month = match[2];
+    day = match[3];
+    d = new Date(year, Number(month) - 1, Number(day));
+  } else {
+    d = new Date(dateStr);
+    year = d.getFullYear() || 2026;
+    month = String(d.getMonth() + 1).padStart(2, '0');
+    day = String(d.getDate()).padStart(2, '0');
+  }
+
   const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   const weekday = weekdays[d.getDay()] || 'DAY';
   return {
@@ -93,7 +104,7 @@ function parseDateParts(dateStr) {
   };
 }
 
-// Helper: Common Header - 100% Identical metrics with brokolidev.com
+// Helper: Common Header - 100% Identical metrics with brokolidev.com + Language Switcher
 function getHeaderHtml(rootPrefix = '') {
   return `
   <!-- Ambient Background Light Effects (Identical to brokolidev.com) -->
@@ -110,7 +121,7 @@ function getHeaderHtml(rootPrefix = '') {
           <span>brokoli<span class="text-accent">.dev</span></span>
         </a>
 
-        <!-- Navigation Links & Theme Toggle -->
+        <!-- Navigation Links, Language Switcher & Theme Toggle -->
         <nav class="header-nav">
           <a href="https://brokolidev.com" class="nav-tab-inactive">
             <span>Profile</span>
@@ -118,6 +129,13 @@ function getHeaderHtml(rootPrefix = '') {
           <a href="${rootPrefix ? rootPrefix + 'index.html' : '/'}" class="nav-tab-active">
             <span>Blog</span>
           </a>
+
+          <!-- Language Switcher in Header -->
+          <div class="lang-switch-group" role="group" aria-label="Language selection">
+            <button type="button" class="lang-btn" data-set-lang="ko" title="한국어로 전환">KR</button>
+            <span class="lang-sep">/</span>
+            <button type="button" class="lang-btn" data-set-lang="en" title="Switch to English">EN</button>
+          </div>
 
           <!-- Theme Toggle -->
           <button type="button" id="theme-toggle" aria-label="Toggle theme" class="theme-btn">
@@ -142,7 +160,7 @@ function getFooterHtml() {
 
 // Build Pipeline
 async function build() {
-  console.log('⚡️ Compiling minimalist Worklog...');
+  console.log('⚡️ Compiling minimalist bilingual Worklog...');
 
   fs.mkdirSync(DIST_POSTS_DIR, { recursive: true });
   fs.mkdirSync(path.join(DIST_DIR, 'css'), { recursive: true });
@@ -153,34 +171,75 @@ async function build() {
   }
 
   const postFiles = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith('.md'));
-  const posts = [];
+  const postMap = {};
 
   for (const file of postFiles) {
     const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf-8');
     const parsed = frontMatter(raw);
-    const dateMeta = parseDateParts(parsed.attributes.date || '2026-10-09');
 
-    const postData = {
+    let lang = (parsed.attributes.lang || '').toLowerCase();
+    if (!lang) {
+      if (file.endsWith('.en.md')) lang = 'en';
+      else if (file.endsWith('.ko.md')) lang = 'ko';
+      else lang = 'ko';
+    }
+
+    let baseSlug = parsed.attributes.slug;
+    if (!baseSlug) {
+      baseSlug = file.replace(/\.(ko|en)\.md$/, '').replace(/\.md$/, '');
+    }
+
+    const dateMeta = parseDateParts(parsed.attributes.date || '2026-10-08');
+
+    const item = {
       ...parsed.attributes,
+      lang,
+      slug: baseSlug,
+      title: parsed.attributes.title || baseSlug,
       body: parsed.body,
       html: marked(parsed.body),
-      slug: parsed.attributes.slug || file.replace(/\.md$/, ''),
-      date: parsed.attributes.date || '2026-10-09',
+      date: parsed.attributes.date || '2026-10-08',
       dateMeta,
-      readTime: parsed.attributes.readTime || '3 min',
+      readTime: parsed.attributes.readTime || '1 min',
       tags: parsed.attributes.tags || [],
-      category: parsed.attributes.category || 'Engineering',
+      category: parsed.attributes.category || 'Essay',
       excerpt: parsed.attributes.excerpt || '',
     };
-    posts.push(postData);
+
+    if (!postMap[baseSlug]) {
+      postMap[baseSlug] = {
+        slug: baseSlug,
+        date: item.date,
+        dateMeta: item.dateMeta,
+        ko: null,
+        en: null,
+      };
+    }
+
+    if (lang === 'en') {
+      postMap[baseSlug].en = item;
+    } else {
+      postMap[baseSlug].ko = item;
+    }
   }
 
+  // Fallback: If either ko or en is missing, mirror the other
+  const pairedPosts = Object.values(postMap).map((group) => {
+    if (!group.ko && group.en) {
+      group.ko = { ...group.en, lang: 'ko' };
+    }
+    if (!group.en && group.ko) {
+      group.en = { ...group.ko, lang: 'en' };
+    }
+    return group;
+  });
+
   // Sort by date descending
-  posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+  pairedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   // Group by Year
   const yearGroups = {};
-  for (const post of posts) {
+  for (const post of pairedPosts) {
     const yr = post.dateMeta.year;
     if (!yearGroups[yr]) yearGroups[yr] = [];
     yearGroups[yr].push(post);
@@ -188,19 +247,19 @@ async function build() {
   const sortedYears = Object.keys(yearGroups).sort((a, b) => Number(b) - Number(a));
 
   // 1. Generate Individual Standalone Post Pages
-  for (const post of posts) {
+  for (const post of pairedPosts) {
     const postHtml = `<!DOCTYPE html>
-<html lang="en" class="h-full antialiased dark">
+<html lang="en" class="h-full antialiased dark" data-lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#09090b">
 
   <!-- Primary Meta Tags -->
-  <title>${post.title} - Blog - brokolidev</title>
-  <meta name="title" content="${post.title} - Blog - brokolidev">
-  <meta name="description" content="${(post.excerpt || '').replace(/"/g, '&quot;')}">
-  <meta name="keywords" content="${[...post.tags, post.category, 'brokolidev', 'Engineering Worklog', 'Ted Choi'].join(', ')}">
+  <title class="lang-ko">${post.ko.title} - Blog - brokolidev</title>
+  <meta name="title" content="${post.ko.title} - Blog - brokolidev">
+  <meta name="description" content="${(post.ko.excerpt || '').replace(/"/g, '&quot;')}">
+  <meta name="keywords" content="${[...post.ko.tags, post.ko.category, 'brokolidev', 'Engineering Worklog', 'Ted Choi'].join(', ')}">
   <meta name="author" content="Ted Choi">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://blog.brokolidev.com/posts/${post.slug}.html">
@@ -208,8 +267,8 @@ async function build() {
   <!-- Open Graph / Facebook / LinkedIn -->
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="brokolidev">
-  <meta property="og:title" content="${post.title} - Blog - brokolidev">
-  <meta property="og:description" content="${(post.excerpt || '').replace(/"/g, '&quot;')}">
+  <meta property="og:title" content="${post.ko.title} - Blog - brokolidev">
+  <meta property="og:description" content="${(post.ko.excerpt || '').replace(/"/g, '&quot;')}">
   <meta property="og:url" content="https://blog.brokolidev.com/posts/${post.slug}.html">
   <meta property="og:image" content="https://brokolidev.com/img/profile.png">
   <meta property="article:published_time" content="${post.date}">
@@ -218,8 +277,8 @@ async function build() {
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${post.title} - Blog - brokolidev">
-  <meta name="twitter:description" content="${(post.excerpt || '').replace(/"/g, '&quot;')}">
+  <meta name="twitter:title" content="${post.ko.title} - Blog - brokolidev">
+  <meta name="twitter:description" content="${(post.ko.excerpt || '').replace(/"/g, '&quot;')}">
   <meta name="twitter:image" content="https://brokolidev.com/img/profile.png">
   <meta name="twitter:creator" content="@brokolidev">
 
@@ -234,13 +293,25 @@ async function build() {
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
 
-  <!-- Theme Initialization -->
+  <!-- Language & Theme Initialization (Zero Flash) -->
   <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    var savedLang = localStorage.getItem('lang');
+    var activeLang = 'ko';
+    if (savedLang === 'ko' || savedLang === 'en') {
+      activeLang = savedLang;
+    } else {
+      var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+      if (navLang && !navLang.startsWith('ko') && navLang.startsWith('en')) {
+        activeLang = 'en';
+      }
+    }
+    document.documentElement.setAttribute('data-lang', activeLang);
   </script>
 
   <!-- Structured Data (JSON-LD) -->
@@ -248,9 +319,9 @@ async function build() {
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "${post.title.replace(/"/g, '\\"')}",
+    "headline": "${post.ko.title.replace(/"/g, '\\"')}",
     "datePublished": "${post.date}",
-    "description": "${(post.excerpt || '').replace(/"/g, '\\"')}",
+    "description": "${(post.ko.excerpt || '').replace(/"/g, '\\"')}",
     "url": "https://blog.brokolidev.com/posts/${post.slug}.html",
     "author": {
       "@type": "Person",
@@ -278,18 +349,31 @@ async function build() {
             <div>
               <span class="log-date" style="font-size: 0.9rem;">${post.date}</span>
               <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
-              <span class="log-tag">${post.category}</span>
+              <span class="log-tag lang-ko">${post.ko.category}</span>
+              <span class="log-tag lang-en">${post.en.category}</span>
               <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
-              <span>${post.readTime}</span>
+              <span class="lang-ko">${post.ko.readTime}</span>
+              <span class="lang-en">${post.en.readTime}</span>
+            </div>
+            <div class="post-lang-badge">
+              <button type="button" data-post-lang="ko" title="한국어로 읽기">KR</button>
+              <span style="opacity: 0.4;">/</span>
+              <button type="button" data-post-lang="en" title="Read in English">EN</button>
             </div>
           </div>
 
-          <h1 style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text-main);">
-            ${post.title}
+          <h1 class="lang-ko" style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text-main);">
+            ${post.ko.title}
+          </h1>
+          <h1 class="lang-en" style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text-main);">
+            ${post.en.title}
           </h1>
 
-          <div class="prose-content">
-            ${post.html}
+          <div class="prose-content lang-ko">
+            ${post.ko.html}
+          </div>
+          <div class="prose-content lang-en">
+            ${post.en.html}
           </div>
         </article>
       </div>
@@ -306,7 +390,7 @@ async function build() {
 
   // 2. Generate Worklog Timeline Index Page
   const timelineHtml = `<!DOCTYPE html>
-<html lang="en" class="h-full antialiased dark">
+<html lang="en" class="h-full antialiased dark" data-lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -348,13 +432,25 @@ async function build() {
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Theme Initialization -->
+  <!-- Language & Theme Initialization (Zero Flash) -->
   <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    var savedLang = localStorage.getItem('lang');
+    var activeLang = 'ko';
+    if (savedLang === 'ko' || savedLang === 'en') {
+      activeLang = savedLang;
+    } else {
+      var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+      if (navLang && !navLang.startsWith('ko') && navLang.startsWith('en')) {
+        activeLang = 'en';
+      }
+    }
+    document.documentElement.setAttribute('data-lang', activeLang);
   </script>
 
   <!-- Structured Data (JSON-LD) -->
@@ -406,13 +502,18 @@ async function build() {
                 <div class="log-summary">
                   <div class="log-summary-left">
                     <span class="log-date">${post.dateMeta.monthDay} <span style="font-size: 0.72rem; opacity: 0.75;">${post.dateMeta.weekday}</span></span>
-                    <span class="log-title">${post.title}</span>
+                    
+                    <span class="log-title lang-ko">${post.ko.title}</span>
+                    <span class="log-title lang-en">${post.en.title}</span>
+
                     <div class="log-tags">
-                      <span class="log-tag">${post.category}</span>
+                      <span class="log-tag lang-ko">${post.ko.category}</span>
+                      <span class="log-tag lang-en">${post.en.category}</span>
                     </div>
                   </div>
                   <div class="log-summary-right">
-                    <span class="log-readtime">${post.readTime}</span>
+                    <span class="log-readtime lang-ko">${post.ko.readTime}</span>
+                    <span class="log-readtime lang-en">${post.en.readTime}</span>
                     <i class="fas fa-chevron-down log-chevron"></i>
                   </div>
                 </div>
@@ -420,17 +521,28 @@ async function build() {
                 <div class="log-content">
                   <div class="log-meta-strip">
                     <div>
-                      <span>Full Date: <strong>${post.date}</strong></span>
+                      <span>Date: <strong>${post.date}</strong></span>
                       <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
-                      <span>Tags: ${post.tags.map((t) => `#${t}`).join(' ')}</span>
+                      <span class="lang-ko">Tags: ${post.ko.tags.map((t) => `#${t}`).join(' ')}</span>
+                      <span class="lang-en">Tags: ${post.en.tags.map((t) => `#${t}`).join(' ')}</span>
                     </div>
-                    <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy shareable link">
-                      <i class="fas fa-link"></i> Link
-                    </button>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                      <div class="post-lang-badge">
+                        <button type="button" data-post-lang="ko" title="한국어로 읽기">KR</button>
+                        <span style="opacity: 0.4;">/</span>
+                        <button type="button" data-post-lang="en" title="Read in English">EN</button>
+                      </div>
+                      <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy shareable link">
+                        <i class="fas fa-link"></i> Link
+                      </button>
+                    </div>
                   </div>
 
-                  <div class="prose-content">
-                    ${post.html}
+                  <div class="prose-content lang-ko">
+                    ${post.ko.html}
+                  </div>
+                  <div class="prose-content lang-en">
+                    ${post.en.html}
                   </div>
                 </div>
               </div>`
@@ -459,7 +571,7 @@ async function build() {
   copyDirRecursive(PUBLIC_DIR, DIST_DIR);
   copyDirRecursive(PUBLIC_DIR, __dirname);
 
-  console.log(`✅ Worklog build complete! Processed ${posts.length} entries across ${sortedYears.length} years.`);
+  console.log(`✅ Bilingual Worklog build complete! Processed ${pairedPosts.length} entries across ${sortedYears.length} years.`);
 }
 
 build().catch((err) => {

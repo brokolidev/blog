@@ -158,9 +158,28 @@
     });
   }
 
+  // --- Language Management ---
+  function initLanguage() {
+    function setLanguage(lang) {
+      if (lang !== 'ko' && lang !== 'en') return;
+      document.documentElement.setAttribute('data-lang', lang);
+      localStorage.setItem('lang', lang);
+    }
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-set-lang], [data-post-lang]');
+      if (!btn) return;
+      const lang = btn.getAttribute('data-set-lang') || btn.getAttribute('data-post-lang');
+      if (lang) {
+        setLanguage(lang);
+      }
+    });
+  }
+
   // DOM Init
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
+    initLanguage();
     initAccordion();
     initPermalinks();
     initCodeCopy();
