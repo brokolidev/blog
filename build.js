@@ -117,6 +117,41 @@ const CRITICAL_LANG_CSS = `
     }
   </style>`;
 
+// Head Initialization Script (Zero-Flash + Instant Fail-Safe Language Toggle)
+function getHeadInitScript() {
+  return `
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    var savedLang = localStorage.getItem('lang');
+    var activeLang = 'ko';
+    if (savedLang === 'ko' || savedLang === 'en') {
+      activeLang = savedLang;
+    } else {
+      var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+      if (navLang && !navLang.startsWith('ko') && navLang.startsWith('en')) {
+        activeLang = 'en';
+      }
+    }
+    document.documentElement.setAttribute('data-lang', activeLang);
+
+    // Global fail-safe language toggle (instant execution, zero cache-lag)
+    window.toggleAppLanguage = function () {
+      var html = document.documentElement;
+      var cur = html.getAttribute('data-lang') === 'en' ? 'en' : 'ko';
+      var next = cur === 'ko' ? 'en' : 'ko';
+      html.setAttribute('data-lang', next);
+      try {
+        localStorage.setItem('lang', next);
+      } catch (e) {}
+    };
+  </script>`;
+}
+
 // Helper: Common Header - 100% Identical metrics with brokolidev.com
 function getHeaderHtml(rootPrefix = '') {
   return `
@@ -313,29 +348,9 @@ async function build() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css?v=20261008b">
+  <link rel="stylesheet" href="../css/style.css?v=20261008c">
   ${CRITICAL_LANG_CSS}
-
-  <!-- Language & Theme Initialization (Zero Flash) -->
-  <script>
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
-    var savedLang = localStorage.getItem('lang');
-    var activeLang = 'ko';
-    if (savedLang === 'ko' || savedLang === 'en') {
-      activeLang = savedLang;
-    } else {
-      var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-      if (navLang && !navLang.startsWith('ko') && navLang.startsWith('en')) {
-        activeLang = 'en';
-      }
-    }
-    document.documentElement.setAttribute('data-lang', activeLang);
-  </script>
+  ${getHeadInitScript()}
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
@@ -367,7 +382,7 @@ async function build() {
             <i class="fas fa-arrow-left" style="font-size: 0.75rem;"></i>
             <span>Timeline</span>
           </a>
-          <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" aria-label="Toggle language">
+          <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" onclick="toggleAppLanguage()" aria-label="Toggle language">
             <span class="lang-toggle-opt lang-opt-ko">KR</span>
             <span class="lang-toggle-sep">/</span>
             <span class="lang-toggle-opt lang-opt-en">EN</span>
@@ -406,7 +421,7 @@ async function build() {
   </main>
 
   ${getFooterHtml()}
-  <script src="../js/main.js"></script>
+  <script src="../js/main.js?v=20261008c"></script>
 </body>
 </html>`;
 
@@ -455,29 +470,9 @@ async function build() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261008b">
+  <link rel="stylesheet" href="css/style.css?v=20261008c">
   ${CRITICAL_LANG_CSS}
-
-  <!-- Language & Theme Initialization (Zero Flash) -->
-  <script>
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
-    var savedLang = localStorage.getItem('lang');
-    var activeLang = 'ko';
-    if (savedLang === 'ko' || savedLang === 'en') {
-      activeLang = savedLang;
-    } else {
-      var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-      if (navLang && !navLang.startsWith('ko') && navLang.startsWith('en')) {
-        activeLang = 'en';
-      }
-    }
-    document.documentElement.setAttribute('data-lang', activeLang);
-  </script>
+  ${getHeadInitScript()}
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
@@ -517,7 +512,7 @@ async function build() {
                 yearIdx === 0
                   ? `<div class="year-heading-actions">
                        <button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>
-                       <button type="button" id="lang-toggle-btn" class="lang-toggle-btn" aria-label="Toggle language">
+                       <button type="button" id="lang-toggle-btn" class="lang-toggle-btn" onclick="toggleAppLanguage()" aria-label="Toggle language">
                          <span class="lang-toggle-opt lang-opt-ko">KR</span>
                          <span class="lang-toggle-sep">/</span>
                          <span class="lang-toggle-opt lang-opt-en">EN</span>
@@ -586,7 +581,7 @@ async function build() {
   </main>
 
   ${getFooterHtml()}
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=20261008c"></script>
 </body>
 </html>`;
 

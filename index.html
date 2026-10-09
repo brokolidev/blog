@@ -46,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261008b">
+  <link rel="stylesheet" href="css/style.css?v=20261008c">
   
   <style id="bilingual-guard-style">
     /* Show ONLY active language, never both */
@@ -58,8 +58,7 @@
       display: none !important;
     }
   </style>
-
-  <!-- Language & Theme Initialization (Zero Flash) -->
+  
   <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
@@ -78,6 +77,17 @@
       }
     }
     document.documentElement.setAttribute('data-lang', activeLang);
+
+    // Global fail-safe language toggle (instant execution, zero cache-lag)
+    window.toggleAppLanguage = function () {
+      var html = document.documentElement;
+      var cur = html.getAttribute('data-lang') === 'en' ? 'en' : 'ko';
+      var next = cur === 'ko' ? 'en' : 'ko';
+      html.setAttribute('data-lang', next);
+      try {
+        localStorage.setItem('lang', next);
+      } catch (e) {}
+    };
   </script>
 
   <!-- Structured Data (JSON-LD) -->
@@ -155,7 +165,7 @@
               <div class="year-divider"></div>
               <div class="year-heading-actions">
                        <button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>
-                       <button type="button" id="lang-toggle-btn" class="lang-toggle-btn" aria-label="Toggle language">
+                       <button type="button" id="lang-toggle-btn" class="lang-toggle-btn" onclick="toggleAppLanguage()" aria-label="Toggle language">
                          <span class="lang-toggle-opt lang-opt-ko">KR</span>
                          <span class="lang-toggle-sep">/</span>
                          <span class="lang-toggle-opt lang-opt-en">EN</span>
@@ -234,6 +244,6 @@
       <p>© 2026 <strong>brokolidev.com</strong> · Ted Choi</p>
     </div>
   </footer>
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=20261008c"></script>
 </body>
 </html>

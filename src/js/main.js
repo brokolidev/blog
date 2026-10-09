@@ -191,12 +191,18 @@
     });
   }
 
-  // DOM Init
-  document.addEventListener('DOMContentLoaded', () => {
+  // DOM Init with immediate execution if readyState is already ready
+  function bootstrap() {
     initTheme();
     initLanguage();
     initAccordion();
     initPermalinks();
     initCodeCopy();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrap);
+  } else {
+    bootstrap();
+  }
 })();
