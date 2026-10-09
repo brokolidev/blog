@@ -6,17 +6,17 @@ import { marked } from 'marked';
 import Prism from 'prismjs';
 import loadLanguages from 'prismjs/components/index.js';
 
-// Safely load common languages
+// Safely load common languages for syntax highlighting
 try {
   loadLanguages(['bash', 'json', 'javascript', 'typescript', 'python', 'php', 'css']);
 } catch (e) {
-  // Ignore fallback warnings
+  // Ignore fallback
 }
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Custom marked renderer for Prism code highlighting
+// Custom marked renderer with Prism code highlighting
 const renderer = new marked.Renderer();
 renderer.code = function ({ text, lang }) {
   const cleanLang = (lang || '').toLowerCase().trim();
@@ -36,36 +36,45 @@ const POSTS_DIR = path.join(__dirname, 'content', 'posts');
 const DIST_DIR = path.join(__dirname, 'dist');
 const DIST_POSTS_DIR = path.join(DIST_DIR, 'posts');
 
-// Helper: Common Header HTML
+// Helper: Format Date String to Year, MonthDay, and Weekday
+function parseDateParts(dateStr) {
+  const d = new Date(dateStr);
+  const year = d.getFullYear() || 2026;
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  const weekday = weekdays[d.getDay()] || 'DAY';
+  return {
+    year: String(year),
+    monthDay: `${month}.${day}`,
+    weekday,
+    full: `${year}.${month}.${day}`,
+  };
+}
+
+// Helper: Common Header
 function getHeaderHtml(rootPrefix = '') {
   const homeLink = rootPrefix ? `${rootPrefix}index.html` : 'index.html';
   return `
-  <!-- Ambient Lighting Layer -->
-  <div class="bg-ambient-layer" aria-hidden="true">
-    <div class="ambient-orb-1"></div>
-    <div class="ambient-orb-2"></div>
-  </div>
-
-  <!-- Header -->
-  <header class="site-header">
-    <div class="container">
-      <div class="nav-wrapper">
-        <a href="${homeLink}" class="brand-link">
-          <span class="brand-badge">🥦</span>
-          <span class="brand-title">brokoli<span class="brand-accent">.blog</span></span>
-          <span class="brand-tag">v1.0</span>
+  <header class="worklog-header">
+    <div class="worklog-container">
+      <div class="header-inner">
+        <a href="${homeLink}" class="header-brand">
+          <span>brokoli.dev</span>
+          <span style="color: var(--text-faint);">/</span>
+          <span class="badge-log">worklog</span>
         </a>
 
-        <div class="nav-actions">
-          <a href="https://brokolidev.com" target="_blank" rel="noopener noreferrer" class="nav-link">
-            <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+        <div class="header-actions">
+          <a href="https://brokolidev.com" target="_blank" rel="noopener noreferrer" class="btn-ghost">
             <span>Portfolio</span>
+            <i class="fas fa-arrow-up-right-from-square text-xs" style="opacity: 0.7;"></i>
           </a>
-          <a href="https://github.com/brokolidev" target="_blank" rel="noopener noreferrer" class="btn-icon" aria-label="GitHub">
+          <a href="https://github.com/brokolidev" target="_blank" rel="noopener noreferrer" class="btn-ghost" aria-label="GitHub">
             <i class="fab fa-github"></i>
           </a>
-          <button type="button" id="theme-toggle" class="btn-icon" aria-label="Toggle theme">
-            <i class="fas fa-sun text-amber-400"></i>
+          <button type="button" id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
+            <i class="fas fa-sun text-xs text-amber-400"></i>
           </button>
         </div>
       </div>
@@ -73,36 +82,31 @@ function getHeaderHtml(rootPrefix = '') {
   </header>`;
 }
 
-// Helper: Common Footer HTML
+// Helper: Common Footer
 function getFooterHtml() {
   return `
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-content">
-        <div>
-          <p>© 2026 <strong>brokolidev</strong>. Written by Ted Choi in Calgary, AB.</p>
-          <p class="text-xs text-zinc-500 mt-1">Zero-cost static SSG hosted globally via Cloudflare Pages.</p>
-        </div>
+  <footer class="worklog-footer">
+    <div class="worklog-container">
+      <div class="footer-inner">
+        <p>© 2026 <strong>brokolidev</strong>. Minimalist engineering worklog.</p>
         <div class="footer-links">
-          <a href="https://brokolidev.com" class="footer-link">About Ted</a>
-          <a href="https://linkedin.com/in/brokolidev" target="_blank" class="footer-link">LinkedIn</a>
-          <a href="https://github.com/brokolidev" target="_blank" class="footer-link">GitHub</a>
+          <a href="https://brokolidev.com">Portfolio</a>
+          <a href="https://github.com/brokolidev/blog" target="_blank">Repository</a>
+          <a href="https://linkedin.com/in/brokolidev" target="_blank">LinkedIn</a>
         </div>
       </div>
     </div>
   </footer>`;
 }
 
-// Build Function
+// Build Pipeline
 async function build() {
-  console.log('🚀 Starting brokolidev blog static build...');
+  console.log('⚡️ Compiling minimalist Worklog...');
 
-  // Ensure directories exist
   fs.mkdirSync(DIST_POSTS_DIR, { recursive: true });
   fs.mkdirSync(path.join(DIST_DIR, 'css'), { recursive: true });
   fs.mkdirSync(path.join(DIST_DIR, 'js'), { recursive: true });
 
-  // Read all markdown files
   if (!fs.existsSync(POSTS_DIR)) {
     fs.mkdirSync(POSTS_DIR, { recursive: true });
   }
@@ -113,36 +117,44 @@ async function build() {
   for (const file of postFiles) {
     const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf-8');
     const parsed = frontMatter(raw);
+    const dateMeta = parseDateParts(parsed.attributes.date || '2026-10-09');
+
     const postData = {
       ...parsed.attributes,
       body: parsed.body,
       html: marked(parsed.body),
       slug: parsed.attributes.slug || file.replace(/\.md$/, ''),
       date: parsed.attributes.date || '2026-10-09',
-      readTime: parsed.attributes.readTime || '3 min read',
+      dateMeta,
+      readTime: parsed.attributes.readTime || '3 min',
       tags: parsed.attributes.tags || [],
-      category: parsed.attributes.category || 'General',
+      category: parsed.attributes.category || 'Engineering',
       excerpt: parsed.attributes.excerpt || '',
-      featured: !!parsed.attributes.featured,
     };
     posts.push(postData);
   }
 
-  // Sort posts by date descending
+  // Sort by date descending
   posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  // 1. Generate Individual Post Pages
+  // Group by Year
+  const yearGroups = {};
+  for (const post of posts) {
+    const yr = post.dateMeta.year;
+    if (!yearGroups[yr]) yearGroups[yr] = [];
+    yearGroups[yr].push(post);
+  }
+  const sortedYears = Object.keys(yearGroups).sort((a, b) => Number(b) - Number(a));
+
+  // 1. Generate Individual Standalone Post Pages (for direct deep-linking)
   for (const post of posts) {
     const postHtml = `<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${post.title} — brokoli.blog</title>
+  <title>${post.title} — brokoli.dev/worklog</title>
   <meta name="description" content="${post.excerpt}">
-  <meta property="og:title" content="${post.title}">
-  <meta property="og:description" content="${post.excerpt}">
-  <meta property="og:type" content="article">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -150,49 +162,31 @@ async function build() {
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <div id="reading-progress-bar" class="reading-progress-bar"></div>
   ${getHeaderHtml('../')}
 
-  <main class="container-narrow">
-    <article>
-      <header class="article-header">
-        <a href="../index.html" class="back-link">
-          <i class="fas fa-arrow-left"></i>
-          <span>Back to All Articles</span>
-        </a>
-        <div class="article-tags">
-          <span class="post-card-tag">${post.category}</span>
-          ${post.tags.map((t) => `<span class="post-card-tag" style="background: var(--bg-surface); color: var(--text-muted);">${t}</span>`).join(' ')}
-        </div>
-        <h1 class="article-title">${post.title}</h1>
-        <div class="article-meta-bar">
-          <div class="author-chip">
-            <span style="font-size: 1.25rem;">🥦</span>
-            <span>${post.author || 'Ted Choi'}</span>
-          </div>
-          <span>•</span>
-          <span><i class="far fa-calendar-alt mr-1"></i> ${post.date}</span>
-          <span>•</span>
-          <span><i class="far fa-clock mr-1"></i> ${post.readTime}</span>
-        </div>
-      </header>
+  <main class="worklog-container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <a href="../index.html" class="btn-ghost" style="margin-bottom: 2rem; display: inline-flex;">
+      <i class="fas fa-arrow-left text-xs"></i>
+      <span>Back to Timeline</span>
+    </a>
 
-      <div class="article-body">
-        ${post.html}
+    <article class="log-item is-open" style="border: none; background: transparent; box-shadow: none;">
+      <div class="log-meta-strip" style="border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+        <div>
+          <span class="log-date" style="font-size: 0.9rem;">${post.date}</span>
+          <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
+          <span class="log-tag">${post.category}</span>
+          <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
+          <span>${post.readTime}</span>
+        </div>
       </div>
 
-      <!-- Author Bio Box -->
-      <div class="author-box">
-        <div style="font-size: 3rem;">🥦</div>
-        <div class="author-box-content">
-          <h4>Ted Choi (brokolidev)</h4>
-          <p>Software Engineer in Calgary with 10+ years of full-stack engineering, cloud infrastructure, and AI-driven automation experience.</p>
-          <div class="author-box-links">
-            <a href="https://brokolidev.com" target="_blank" class="author-link"><i class="fas fa-globe"></i> Portfolio</a>
-            <a href="https://github.com/brokolidev" target="_blank" class="author-link"><i class="fab fa-github"></i> GitHub</a>
-            <a href="https://linkedin.com/in/brokolidev" target="_blank" class="author-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
-          </div>
-        </div>
+      <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text-main);">
+        ${post.title}
+      </h1>
+
+      <div class="prose-content">
+        ${post.html}
       </div>
     </article>
   </main>
@@ -205,19 +199,16 @@ async function build() {
     fs.writeFileSync(path.join(DIST_POSTS_DIR, `${post.slug}.html`), postHtml, 'utf-8');
   }
 
-  // 2. Generate Index Home Page
-  const featured = posts.find((p) => p.featured) || posts[0];
-  const regularPosts = posts.filter((p) => p !== featured);
+  // 2. Generate Worklog Timeline Index Page
+  const latestDate = posts.length > 0 ? posts[0].date : 'Today';
 
-  const categories = ['All', ...new Set(posts.map((p) => p.category))];
-
-  const indexHtml = `<!DOCTYPE html>
+  const timelineHtml = `<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>brokoli.blog — Notes on Code, Cloud & AI Engineering</title>
-  <meta name="description" content="Technical blog of Ted Choi (brokolidev). Practical thoughts on full-stack architecture, Cloudflare Pages, autonomous AI agents, and developer velocity.">
+  <title>Worklog — brokoli.dev</title>
+  <meta name="description" content="Engineering worklog and architectural retrospective by Ted Choi. Chronological development notes with expandable timeline entries.">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -225,93 +216,88 @@ async function build() {
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  ${getHeaderHtml('home')}
+  ${getHeaderHtml('')}
 
-  <main class="container">
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="hero-pill">
-        <span class="hero-pill-dot"></span>
-        <span>ENGINEERING LOGS & RETROSPECTIVES</span>
-      </div>
-      <h1 class="hero-title">
-        Exploring Modern Code,<br>
-        <span class="hero-title-gradient">Architecture & Autonomous AI.</span>
-      </h1>
-      <p class="hero-description">
-        Curated field notes, architectural deep dives, and zero-cost cloud automation experiments by Ted Choi.
+  <main class="worklog-container">
+    <!-- Intro / Stats Bar -->
+    <section class="worklog-intro">
+      <h1 class="intro-title">Worklog</h1>
+      <p class="intro-desc">
+        Chronological records of architectural decisions, systems development, and engineering retrospect. Click any entry to expand details.
       </p>
+
+      <div class="intro-stats-bar">
+        <div class="stat-item">
+          <span>Entries:</span>
+          <span class="stat-highlight">${posts.length}</span>
+          <span style="color: var(--border-default); margin: 0 0.4rem;">|</span>
+          <span>Latest update:</span>
+          <span class="stat-highlight">${latestDate}</span>
+        </div>
+
+        <div class="controls-bar">
+          <button type="button" id="toggle-all-btn" class="toggle-all-btn">
+            Expand All
+          </button>
+        </div>
+      </div>
     </section>
 
-    ${
-      featured
-        ? `<!-- Featured Article -->
-    <a href="posts/${featured.slug}.html" id="featured-card" class="featured-card">
-      <div class="featured-header">
-        <span class="featured-badge">
-          <i class="fas fa-bolt text-amber-400"></i>
-          FEATURED POST
-        </span>
-        <div class="featured-meta">
-          <span>${featured.date}</span>
-          <span>•</span>
-          <span>${featured.readTime}</span>
-        </div>
-      </div>
-      <h2 class="featured-title">${featured.title}</h2>
-      <p class="featured-excerpt">${featured.excerpt}</p>
-      <div class="post-card-footer">
-        <span class="post-card-tag">${featured.category}</span>
-        <span class="inline-flex items-center gap-1 font-semibold">
-          Read Article <i class="fas fa-arrow-right"></i>
-        </span>
-      </div>
-    </a>`
-        : ''
-    }
-
-    <!-- Filter & Search Toolbar -->
-    <div class="filter-bar">
-      <div class="category-chips">
-        ${categories
-          .map(
-            (cat, idx) => `
-          <button type="button" class="chip-btn ${idx === 0 ? 'active' : ''}" data-filter="${cat.toLowerCase()}">
-            ${cat}
-          </button>`
-          )
-          .join('')}
-      </div>
-
-      <div class="search-input-wrapper">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" id="search-input" class="search-input" placeholder="Search articles...">
-      </div>
-    </div>
-
-    <!-- Posts Grid -->
-    <div class="posts-grid">
-      ${posts
+    <!-- Timeline Sections by Year -->
+    <section class="worklog-timeline">
+      ${sortedYears
         .map(
-          (post) => `
-      <article class="post-card" data-category="${post.category.toLowerCase()}">
-        <div class="post-card-meta">
-          <span class="post-card-tag">${post.category}</span>
-          <span>•</span>
-          <span>${post.readTime}</span>
+          (year) => `
+      <div class="year-block" id="year-${year}">
+        <div class="year-heading">
+          <span class="year-title">${year}</span>
+          <span class="year-count-badge">${yearGroups[year].length} logs</span>
+          <div class="year-divider"></div>
         </div>
-        <h3 class="post-card-title">${post.title}</h3>
-        <p class="post-card-excerpt">${post.excerpt}</p>
-        <div class="post-card-footer">
-          <span class="text-xs text-zinc-500 font-mono">${post.date}</span>
-          <a href="posts/${post.slug}.html" class="inline-flex items-center gap-1 text-teal-500 font-semibold" style="text-decoration: none;">
-            Read <i class="fas fa-chevron-right text-xs"></i>
-          </a>
+
+        <div class="entries-list">
+          ${yearGroups[year]
+            .map(
+              (post, idx) => `
+          <div class="log-item" data-slug="${post.slug}">
+            <div class="log-summary">
+              <div class="log-summary-left">
+                <span class="log-date">${post.dateMeta.monthDay} <span style="font-size: 0.72rem; opacity: 0.75;">${post.dateMeta.weekday}</span></span>
+                <span class="log-title">${post.title}</span>
+                <div class="log-tags">
+                  <span class="log-tag">${post.category}</span>
+                </div>
+              </div>
+              <div class="log-summary-right">
+                <span class="log-readtime">${post.readTime}</span>
+                <i class="fas fa-chevron-down log-chevron"></i>
+              </div>
+            </div>
+
+            <div class="log-content">
+              <div class="log-meta-strip">
+                <div>
+                  <span>Full Date: <strong>${post.date}</strong></span>
+                  <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
+                  <span>Tags: ${post.tags.map((t) => `#${t}`).join(' ')}</span>
+                </div>
+                <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy shareable link">
+                  <i class="fas fa-link"></i> Link
+                </button>
+              </div>
+
+              <div class="prose-content">
+                ${post.html}
+              </div>
+            </div>
+          </div>`
+            )
+            .join('')}
         </div>
-      </article>`
+      </div>`
         )
         .join('')}
-    </div>
+    </section>
   </main>
 
   ${getFooterHtml()}
@@ -319,16 +305,12 @@ async function build() {
 </body>
 </html>`;
 
-  fs.writeFileSync(path.join(DIST_DIR, 'index.html'), indexHtml, 'utf-8');
-
-  // Copy CSS and JS into dist
+  fs.writeFileSync(path.join(DIST_DIR, 'index.html'), timelineHtml, 'utf-8');
   fs.copyFileSync(path.join(__dirname, 'src', 'css', 'style.css'), path.join(DIST_DIR, 'css', 'style.css'));
   fs.copyFileSync(path.join(__dirname, 'src', 'js', 'main.js'), path.join(DIST_DIR, 'js', 'main.js'));
+  fs.writeFileSync(path.join(__dirname, 'index.html'), timelineHtml, 'utf-8');
 
-  // Also synchronize root index.html for direct local preview
-  fs.writeFileSync(path.join(__dirname, 'index.html'), indexHtml, 'utf-8');
-
-  console.log(`✅ Build complete! Processed ${posts.length} posts into ${DIST_DIR}`);
+  console.log(`✅ Worklog build complete! Processed ${posts.length} entries across ${sortedYears.length} years.`);
 }
 
 build().catch((err) => {

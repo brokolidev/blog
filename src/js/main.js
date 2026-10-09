@@ -1,6 +1,6 @@
 /* ==========================================================================
-   brokoli.blog - Client Scripts
-   Interactive UI: Theme Switcher, Search & Filter, Code Copy, Progress Bar
+   brokoli.log - Worklog Client Scripts
+   Interactive Year & Date Accordion, Hash Auto-Open, Copy Code, Theme Switcher
    ========================================================================== */
 
 (function () {
@@ -8,11 +8,11 @@
 
   // --- 1. Theme Management ---
   function initTheme() {
-    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeBtn = document.getElementById('theme-toggle');
     const htmlEl = document.documentElement;
 
-    function applyTheme(isDark) {
-      if (isDark) {
+    function setTheme(dark) {
+      if (dark) {
         htmlEl.classList.add('dark');
         localStorage.setItem('theme', 'dark');
       } else {
@@ -21,119 +21,105 @@
       }
     }
 
-    // Determine initial theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      applyTheme(savedTheme === 'dark');
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      setTheme(saved === 'dark');
     } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      applyTheme(prefersDark);
+      setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
     }
 
-    // Toggle button click listener
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', () => {
-        const isCurrentDark = htmlEl.classList.contains('dark');
-        applyTheme(!isCurrentDark);
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        setTheme(!htmlEl.classList.contains('dark'));
       });
     }
-
-    // Listen for OS theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem('theme')) {
-        applyTheme(e.matches);
-      }
-    });
   }
 
-  // --- 2. Live Search & Category Filter ---
-  function initFilterAndSearch() {
-    const searchInput = document.getElementById('search-input');
-    const chipBtns = document.querySelectorAll('.chip-btn');
-    const postCards = document.querySelectorAll('.post-card');
-    const featuredCard = document.getElementById('featured-card');
+  // --- 2. Worklog Accordion Engine ---
+  function initAccordion() {
+    const logItems = document.querySelectorAll('.log-item');
+    const toggleAllBtn = document.getElementById('toggle-all-btn');
 
-    let currentCategory = 'all';
-    let searchQuery = '';
+    // Individual item toggle
+    logItems.forEach((item) => {
+      const summary = item.querySelector('.log-summary');
+      if (!summary) return;
 
-    function filterPosts() {
-      let visibleCount = 0;
+      summary.addEventListener('click', (e) => {
+        // Prevent toggle if clicking on permalink copy button
+        if (e.target.closest('.log-permalink-btn')) return;
 
-      postCards.forEach((card) => {
-        const title = (card.querySelector('.post-card-title')?.textContent || '').toLowerCase();
-        const excerpt = (card.querySelector('.post-card-excerpt')?.textContent || '').toLowerCase();
-        const tag = (card.getAttribute('data-category') || '').toLowerCase();
+        const isOpen = item.classList.contains('is-open');
+        item.classList.toggle('is-open', !isOpen);
 
-        const matchesCategory = currentCategory === 'all' || tag === currentCategory.toLowerCase();
-        const matchesSearch = !searchQuery || title.includes(searchQuery) || excerpt.includes(searchQuery) || tag.includes(searchQuery);
-
-        if (matchesCategory && matchesSearch) {
-          card.style.display = 'flex';
-          visibleCount++;
-        } else {
-          card.style.display = 'none';
+        if (!isOpen) {
+          const slug = item.getAttribute('data-slug');
+          if (slug) {
+            history.replaceState(null, null, `#${slug}`);
+          }
         }
-      });
-
-      // Handle empty state message
-      let emptyMsg = document.getElementById('empty-search-msg');
-      if (visibleCount === 0) {
-        if (!emptyMsg) {
-          emptyMsg = document.createElement('div');
-          emptyMsg.id = 'empty-search-msg';
-          emptyMsg.className = 'text-center py-12 text-zinc-500';
-          emptyMsg.innerHTML = '<p class="text-lg">No matching posts found 🍃</p><p class="text-sm mt-1">Try another keyword or category filter.</p>';
-          const grid = document.querySelector('.posts-grid');
-          if (grid) grid.parentNode.insertBefore(emptyMsg, grid.nextSibling);
-        }
-        emptyMsg.style.display = 'block';
-      } else if (emptyMsg) {
-        emptyMsg.style.display = 'none';
-      }
-
-      // Hide featured card if filtering
-      if (featuredCard) {
-        if (currentCategory !== 'all' || searchQuery.length > 0) {
-          featuredCard.style.display = 'none';
-        } else {
-          featuredCard.style.display = 'block';
-        }
-      }
-    }
-
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        searchQuery = e.target.value.trim().toLowerCase();
-        filterPosts();
-      });
-    }
-
-    chipBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        chipBtns.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCategory = btn.getAttribute('data-filter') || 'all';
-        filterPosts();
       });
     });
+
+    // Toggle All Button
+    if (toggleAllBtn) {
+      toggleAllBtn.addEventListener('click', () => {
+        const anyClosed = Array.from(logItems).some((i) => !i.classList.contains('is-open'));
+        logItems.forEach((i) => i.classList.toggle('is-open', anyClosed));
+        toggleAllBtn.textContent = anyClosed ? 'Collapse All' : 'Expand All';
+      });
+    }
+
+    // Auto-open from URL Hash on load
+    function checkHash() {
+      const hash = window.location.hash.replace(/^#/, '');
+      if (!hash) {
+        // By default, open the first/latest entry
+        if (logItems.length > 0) {
+          logItems[0].classList.add('is-open');
+        }
+        return;
+      }
+
+      const target = document.querySelector(`.log-item[data-slug="${hash}"]`);
+      if (target) {
+        target.classList.add('is-open');
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      }
+    }
+
+    checkHash();
+    window.addEventListener('hashchange', checkHash);
   }
 
-  // --- 3. Reading Progress Bar (Article View) ---
-  function initReadingProgress() {
-    const progressBar = document.getElementById('reading-progress-bar');
-    if (!progressBar) return;
+  // --- 3. Permalink Copy ---
+  function initPermalinks() {
+    const permalinkBtns = document.querySelectorAll('.log-permalink-btn');
+    permalinkBtns.forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const slug = btn.getAttribute('data-slug');
+        const url = `${window.location.origin}${window.location.pathname}#${slug}`;
 
-    window.addEventListener('scroll', () => {
-      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      if (docHeight <= 0) return;
-      const scrolled = (window.scrollY / docHeight) * 100;
-      progressBar.style.width = Math.min(100, Math.max(0, scrolled)) + '%';
-    }, { passive: true });
+        try {
+          await navigator.clipboard.writeText(url);
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-check" style="color: #2dd4bf;"></i> Copied!';
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy permalink', err);
+        }
+      });
+    });
   }
 
   // --- 4. Code Block Copy Button ---
   function initCodeCopy() {
-    const preBlocks = document.querySelectorAll('pre');
+    const preBlocks = document.querySelectorAll('.prose-content pre');
     preBlocks.forEach((pre) => {
       const code = pre.querySelector('code');
       if (!code) return;
@@ -144,16 +130,16 @@
       copyBtn.setAttribute('aria-label', 'Copy code snippet');
       copyBtn.style.cssText = `
         position: absolute;
-        top: 0.65rem;
-        right: 0.75rem;
-        padding: 0.35rem 0.55rem;
-        font-size: 0.75rem;
-        color: var(--text-muted);
+        top: 0.5rem;
+        right: 0.6rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.72rem;
+        color: var(--text-faint);
         background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 6px;
+        border: 1px solid var(--border-subtle);
+        border-radius: 4px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.15s ease;
       `;
 
       copyBtn.addEventListener('click', async () => {
@@ -164,7 +150,7 @@
             copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
           }, 2000);
         } catch (err) {
-          console.error('Failed to copy code snippet', err);
+          console.error('Failed to copy snippet', err);
         }
       });
 
@@ -172,11 +158,11 @@
     });
   }
 
-  // Execute on DOM load
+  // DOM Init
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
-    initFilterAndSearch();
-    initReadingProgress();
+    initAccordion();
+    initPermalinks();
     initCodeCopy();
   });
 })();

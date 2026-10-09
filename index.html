@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>brokoli.blog — Notes on Code, Cloud & AI Engineering</title>
-  <meta name="description" content="Technical blog of Ted Choi (brokolidev). Practical thoughts on full-stack architecture, Cloudflare Pages, autonomous AI agents, and developer velocity.">
+  <title>Worklog — brokoli.dev</title>
+  <meta name="description" content="Engineering worklog and architectural retrospective by Ted Choi. Chronological development notes with expandable timeline entries.">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,146 +13,272 @@
 </head>
 <body>
   
-  <!-- Ambient Lighting Layer -->
-  <div class="bg-ambient-layer" aria-hidden="true">
-    <div class="ambient-orb-1"></div>
-    <div class="ambient-orb-2"></div>
-  </div>
-
-  <!-- Header -->
-  <header class="site-header">
-    <div class="container">
-      <div class="nav-wrapper">
-        <a href="homeindex.html" class="brand-link">
-          <span class="brand-badge">🥦</span>
-          <span class="brand-title">brokoli<span class="brand-accent">.blog</span></span>
-          <span class="brand-tag">v1.0</span>
+  <header class="worklog-header">
+    <div class="worklog-container">
+      <div class="header-inner">
+        <a href="index.html" class="header-brand">
+          <span>brokoli.dev</span>
+          <span style="color: var(--text-faint);">/</span>
+          <span class="badge-log">worklog</span>
         </a>
 
-        <div class="nav-actions">
-          <a href="https://brokolidev.com" target="_blank" rel="noopener noreferrer" class="nav-link">
-            <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+        <div class="header-actions">
+          <a href="https://brokolidev.com" target="_blank" rel="noopener noreferrer" class="btn-ghost">
             <span>Portfolio</span>
+            <i class="fas fa-arrow-up-right-from-square text-xs" style="opacity: 0.7;"></i>
           </a>
-          <a href="https://github.com/brokolidev" target="_blank" rel="noopener noreferrer" class="btn-icon" aria-label="GitHub">
+          <a href="https://github.com/brokolidev" target="_blank" rel="noopener noreferrer" class="btn-ghost" aria-label="GitHub">
             <i class="fab fa-github"></i>
           </a>
-          <button type="button" id="theme-toggle" class="btn-icon" aria-label="Toggle theme">
-            <i class="fas fa-sun text-amber-400"></i>
+          <button type="button" id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
+            <i class="fas fa-sun text-xs text-amber-400"></i>
           </button>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="container">
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="hero-pill">
-        <span class="hero-pill-dot"></span>
-        <span>ENGINEERING LOGS & RETROSPECTIVES</span>
-      </div>
-      <h1 class="hero-title">
-        Exploring Modern Code,<br>
-        <span class="hero-title-gradient">Architecture & Autonomous AI.</span>
-      </h1>
-      <p class="hero-description">
-        Curated field notes, architectural deep dives, and zero-cost cloud automation experiments by Ted Choi.
+  <main class="worklog-container">
+    <!-- Intro / Stats Bar -->
+    <section class="worklog-intro">
+      <h1 class="intro-title">Worklog</h1>
+      <p class="intro-desc">
+        Chronological records of architectural decisions, systems development, and engineering retrospect. Click any entry to expand details.
       </p>
+
+      <div class="intro-stats-bar">
+        <div class="stat-item">
+          <span>Entries:</span>
+          <span class="stat-highlight">3</span>
+          <span style="color: var(--border-default); margin: 0 0.4rem;">|</span>
+          <span>Latest update:</span>
+          <span class="stat-highlight">2026-10-09</span>
+        </div>
+
+        <div class="controls-bar">
+          <button type="button" id="toggle-all-btn" class="toggle-all-btn">
+            Expand All
+          </button>
+        </div>
+      </div>
     </section>
 
-    <!-- Featured Article -->
-    <a href="posts/zero-cost-serverless-blog-architecture.html" id="featured-card" class="featured-card">
-      <div class="featured-header">
-        <span class="featured-badge">
-          <i class="fas fa-bolt text-amber-400"></i>
-          FEATURED POST
-        </span>
-        <div class="featured-meta">
-          <span>2026-10-09</span>
-          <span>•</span>
-          <span>4 min read</span>
-        </div>
-      </div>
-      <h2 class="featured-title">Zero-Cost Serverless Tech Blog with Markdown & Cloudflare Pages</h2>
-      <p class="featured-excerpt">How to build and deploy an ultra-fast, zero-maintenance developer blog using Markdown, static site generation, and Cloudflare Pages with zero server fees.</p>
-      <div class="post-card-footer">
-        <span class="post-card-tag">Cloud & DevOps</span>
-        <span class="inline-flex items-center gap-1 font-semibold">
-          Read Article <i class="fas fa-arrow-right"></i>
-        </span>
-      </div>
-    </a>
-
-    <!-- Filter & Search Toolbar -->
-    <div class="filter-bar">
-      <div class="category-chips">
-        
-          <button type="button" class="chip-btn active" data-filter="all">
-            All
-          </button>
-          <button type="button" class="chip-btn " data-filter="cloud & devops">
-            Cloud & DevOps
-          </button>
-          <button type="button" class="chip-btn " data-filter="ai & automation">
-            AI & Automation
-          </button>
-      </div>
-
-      <div class="search-input-wrapper">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" id="search-input" class="search-input" placeholder="Search articles...">
-      </div>
-    </div>
-
-    <!-- Posts Grid -->
-    <div class="posts-grid">
+    <!-- Timeline Sections by Year -->
+    <section class="worklog-timeline">
       
-      <article class="post-card" data-category="cloud & devops">
-        <div class="post-card-meta">
-          <span class="post-card-tag">Cloud & DevOps</span>
-          <span>•</span>
-          <span>4 min read</span>
+      <div class="year-block" id="year-2026">
+        <div class="year-heading">
+          <span class="year-title">2026</span>
+          <span class="year-count-badge">2 logs</span>
+          <div class="year-divider"></div>
         </div>
-        <h3 class="post-card-title">Zero-Cost Serverless Tech Blog with Markdown & Cloudflare Pages</h3>
-        <p class="post-card-excerpt">How to build and deploy an ultra-fast, zero-maintenance developer blog using Markdown, static site generation, and Cloudflare Pages with zero server fees.</p>
-        <div class="post-card-footer">
-          <span class="text-xs text-zinc-500 font-mono">2026-10-09</span>
-          <a href="posts/zero-cost-serverless-blog-architecture.html" class="inline-flex items-center gap-1 text-teal-500 font-semibold" style="text-decoration: none;">
-            Read <i class="fas fa-chevron-right text-xs"></i>
-          </a>
+
+        <div class="entries-list">
+          
+          <div class="log-item" data-slug="zero-cost-serverless-blog-architecture">
+            <div class="log-summary">
+              <div class="log-summary-left">
+                <span class="log-date">10.08 <span style="font-size: 0.72rem; opacity: 0.75;">THU</span></span>
+                <span class="log-title">Zero-Cost Serverless Tech Blog with Markdown & Cloudflare Pages</span>
+                <div class="log-tags">
+                  <span class="log-tag">Cloud & DevOps</span>
+                </div>
+              </div>
+              <div class="log-summary-right">
+                <span class="log-readtime">4 min read</span>
+                <i class="fas fa-chevron-down log-chevron"></i>
+              </div>
+            </div>
+
+            <div class="log-content">
+              <div class="log-meta-strip">
+                <div>
+                  <span>Full Date: <strong>2026-10-09</strong></span>
+                  <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
+                  <span>Tags: #Cloudflare #SSG #Markdown #Architecture</span>
+                </div>
+                <button type="button" class="log-permalink-btn" data-slug="zero-cost-serverless-blog-architecture" title="Copy shareable link">
+                  <i class="fas fa-link"></i> Link
+                </button>
+              </div>
+
+              <div class="prose-content">
+                <h2>Why Ditch Heavy Content Management Systems?</h2>
+<p>For years, developers defaulted to hosting traditional CMS platforms like WordPress or Ghost. While capable, they introduce unnecessary operational overhead:</p>
+<ul>
+<li><strong>Database Maintenance</strong>: Upgrades, automated backups, and connection pooling.</li>
+<li><strong>Security Vulnerabilities</strong>: Routine SQL injection vectors and plugin exploits.</li>
+<li><strong>Idle Server Costs</strong>: Paying $5 to $20/month for virtual machines just to serve a few kilobytes of text.</li>
+</ul>
+<p>By converting raw Markdown into pre-rendered static HTML via a custom Static Site Generator (SSG), every single article is served straight from global CDN edge caches in under <strong>15 milliseconds</strong>.</p>
+<hr>
+<h2>High-Level Architecture Overview</h2>
+<p>Here is how our zero-friction publishing pipeline operates:</p>
+<pre><code class="language-text">[Markdown Article]  ➔  [Node / Bun SSG Builder]  ➔  [GitHub Actions CI/CD]  ➔  [Cloudflare Pages CDN]
+ (content/posts/)        (Parses Frontmatter)         (Runs on Git Push)         (Sub-20ms Global Edge)</code></pre><h3>Key Architectural Benefits</h3>
+<ol>
+<li><strong>Unlimited Free Bandwidth</strong>: Unlike competitors with strict 100GB/month bandwidth caps, Cloudflare Pages provides unlimited traffic on its Free Tier.</li>
+<li><strong>Zero Database Dependencies</strong>: The entire blog state is version-controlled directly inside Git.</li>
+<li><strong>Conversational AI Publishing</strong>: Whenever inspiration strikes, prompts generate fresh Markdown files, test them locally, and trigger automatic deployments.</li>
+</ol>
+<hr>
+<h2>The SSG Build Pipeline</h2>
+<p>Below is the lightweight Node.js transformation script that converts raw Markdown into production-ready static pages:</p>
+<pre><code class="language-javascript"><span class="token keyword">import</span> fs <span class="token keyword">from</span> <span class="token string">'fs-extra'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> frontMatter <span class="token keyword">from</span> <span class="token string">'front-matter'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> marked <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'marked'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">buildStaticSite</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> files <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readdir</span><span class="token punctuation">(</span><span class="token string">'./content/posts'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> file <span class="token keyword">of</span> files<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> rawContent <span class="token operator">=</span> <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">./content/posts/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>file<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> attributes<span class="token punctuation">,</span> body <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">frontMatter</span><span class="token punctuation">(</span>rawContent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> htmlBody <span class="token operator">=</span> <span class="token function">marked</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Inject into clean semantic template</span>
+    <span class="token keyword">const</span> fullHtml <span class="token operator">=</span> <span class="token function">renderTemplate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token operator">...</span>attributes<span class="token punctuation">,</span> <span class="token literal-property property">body</span><span class="token operator">:</span> htmlBody <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">await</span> fs<span class="token punctuation">.</span><span class="token function">outputFile</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">./dist/posts/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>attributes<span class="token punctuation">.</span>slug<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.html</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> fullHtml<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><hr>
+<h2>Conclusion &amp; Next Steps</h2>
+<p>This minimalist setup eliminates friction, guarantees high Lighthouse scores, and lets you focus on what truly matters: <strong>writing great technical content</strong>.</p>
+
+              </div>
+            </div>
+          </div>
+          <div class="log-item" data-slug="autonomous-coding-agents-and-future-of-work">
+            <div class="log-summary">
+              <div class="log-summary-left">
+                <span class="log-date">10.07 <span style="font-size: 0.72rem; opacity: 0.75;">WED</span></span>
+                <span class="log-title">Autonomous Coding Agents: Transforming Developer Velocity in 2026</span>
+                <div class="log-tags">
+                  <span class="log-tag">AI & Automation</span>
+                </div>
+              </div>
+              <div class="log-summary-right">
+                <span class="log-readtime">5 min read</span>
+                <i class="fas fa-chevron-down log-chevron"></i>
+              </div>
+            </div>
+
+            <div class="log-content">
+              <div class="log-meta-strip">
+                <div>
+                  <span>Full Date: <strong>2026-10-08</strong></span>
+                  <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
+                  <span>Tags: #AI #Autonomous Agents #Engineering #Productivity</span>
+                </div>
+                <button type="button" class="log-permalink-btn" data-slug="autonomous-coding-agents-and-future-of-work" title="Copy shareable link">
+                  <i class="fas fa-link"></i> Link
+                </button>
+              </div>
+
+              <div class="prose-content">
+                <h2>The Paradigm Shift: From Autocomplete to Delegation</h2>
+<p>In 2023, developers used AI primarily as an inline tab-completion assistant. By late 2026, the industry has fundamentally pivoted to <strong>Autonomous Goal-Oriented Agents</strong>.</p>
+<p>Rather than asking for small snippets, modern software engineering revolves around:</p>
+<blockquote>
+<p><em>&quot;Here is the specification. Write the database migrations, build the REST endpoints, update the UI components, run end-to-end regression tests, and submit a verified Git commit.&quot;</em></p>
+</blockquote>
+<hr>
+<h2>The Core Triad of Autonomous Development</h2>
+<p>To enable reliable agentic workflows without hallucinations, three architectural pillars are essential:</p>
+<ol>
+<li><strong>Deterministic Verification Loops</strong>:<ul>
+<li>Compiling source code (<code>py_compile</code>, <code>tsc</code>, <code>node --check</code>).</li>
+<li>Strict static type checkers (Pyright, MyPy, ESLint).</li>
+<li>Automated full-stack verification suites (<code>verify_all.sh</code>).</li>
+</ul>
+</li>
+<li><strong>Context-Aware Knowledge Repositories</strong>:<ul>
+<li>Giving agents structured memory about domain models, past design choices, and anti-patterns.</li>
+</ul>
+</li>
+<li><strong>Safe Submodule Isolation</strong>:<ul>
+<li>Developing micro-projects in dedicated repositories, avoiding monolithic sprawl while keeping workspace navigation seamless.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Human as Architect &amp; Reviewer</h2>
+<p>As coding execution becomes automated, the developer&#39;s core role elevates to:</p>
+<ul>
+<li>Formulating accurate system abstractions.</li>
+<li>Identifying high-leverage business models and customer pains.</li>
+<li>Crafting beautiful user experiences that evoke emotional delight.</li>
+</ul>
+<p>The future of software belongs to engineers who can orchestrate fleets of specialized agents with precision and creativity.</p>
+
+              </div>
+            </div>
+          </div>
         </div>
-      </article>
-      <article class="post-card" data-category="ai & automation">
-        <div class="post-card-meta">
-          <span class="post-card-tag">AI & Automation</span>
-          <span>•</span>
-          <span>5 min read</span>
+      </div>
+      <div class="year-block" id="year-2025">
+        <div class="year-heading">
+          <span class="year-title">2025</span>
+          <span class="year-count-badge">1 logs</span>
+          <div class="year-divider"></div>
         </div>
-        <h3 class="post-card-title">Autonomous Coding Agents: Transforming Developer Velocity in 2026</h3>
-        <p class="post-card-excerpt">Reflections on transitioning from conversational copilots to fully autonomous background coding agents that build, test, and ship complete features.</p>
-        <div class="post-card-footer">
-          <span class="text-xs text-zinc-500 font-mono">2026-10-08</span>
-          <a href="posts/autonomous-coding-agents-and-future-of-work.html" class="inline-flex items-center gap-1 text-teal-500 font-semibold" style="text-decoration: none;">
-            Read <i class="fas fa-chevron-right text-xs"></i>
-          </a>
+
+        <div class="entries-list">
+          
+          <div class="log-item" data-slug="infrastructure-standardization-docker">
+            <div class="log-summary">
+              <div class="log-summary-left">
+                <span class="log-date">11.19 <span style="font-size: 0.72rem; opacity: 0.75;">WED</span></span>
+                <span class="log-title">Infrastructure Standardization with Multi-Container Docker</span>
+                <div class="log-tags">
+                  <span class="log-tag">DevOps</span>
+                </div>
+              </div>
+              <div class="log-summary-right">
+                <span class="log-readtime">3 min</span>
+                <i class="fas fa-chevron-down log-chevron"></i>
+              </div>
+            </div>
+
+            <div class="log-content">
+              <div class="log-meta-strip">
+                <div>
+                  <span>Full Date: <strong>2025-11-20</strong></span>
+                  <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
+                  <span>Tags: #Docker #Nginx #Infrastructure</span>
+                </div>
+                <button type="button" class="log-permalink-btn" data-slug="infrastructure-standardization-docker" title="Copy shareable link">
+                  <i class="fas fa-link"></i> Link
+                </button>
+              </div>
+
+              <div class="prose-content">
+                <h2>Eliminating Environment Drift</h2>
+<p>Before unifying our stacks with Docker, onboarding new developers often took days due to mismatched PHP extensions, MySQL version mismatches, and varying local Nginx configurations.</p>
+<h3>Key Milestones Achieved</h3>
+<ul>
+<li><strong>One-Command Bootstrapping</strong>: <code>make up</code> spins up Nginx, PHP-FPM, Redis, and MySQL with pre-seeded test fixtures.</li>
+<li><strong>Isolated Network Topology</strong>: All internal services communicate through private bridge networks, exposing only necessary HTTP ports.</li>
+<li><strong>Deterministic CI Parity</strong>: The identical container definitions are utilized inside our automated test runner.</li>
+</ul>
+<pre><code class="language-bash"><span class="token comment"># Spin up reproducible development environment</span>
+<span class="token function">docker</span> compose up <span class="token parameter variable">-d</span> <span class="token parameter variable">--build</span></code></pre>
+              </div>
+            </div>
+          </div>
         </div>
-      </article>
-    </div>
+      </div>
+    </section>
   </main>
 
   
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-content">
-        <div>
-          <p>© 2026 <strong>brokolidev</strong>. Written by Ted Choi in Calgary, AB.</p>
-          <p class="text-xs text-zinc-500 mt-1">Zero-cost static SSG hosted globally via Cloudflare Pages.</p>
-        </div>
+  <footer class="worklog-footer">
+    <div class="worklog-container">
+      <div class="footer-inner">
+        <p>© 2026 <strong>brokolidev</strong>. Minimalist engineering worklog.</p>
         <div class="footer-links">
-          <a href="https://brokolidev.com" class="footer-link">About Ted</a>
-          <a href="https://linkedin.com/in/brokolidev" target="_blank" class="footer-link">LinkedIn</a>
-          <a href="https://github.com/brokolidev" target="_blank" class="footer-link">GitHub</a>
+          <a href="https://brokolidev.com">Portfolio</a>
+          <a href="https://github.com/brokolidev/blog" target="_blank">Repository</a>
+          <a href="https://linkedin.com/in/brokolidev" target="_blank">LinkedIn</a>
         </div>
       </div>
     </div>
