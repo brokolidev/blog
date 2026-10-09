@@ -158,7 +158,7 @@
     });
   }
 
-  // --- Language Management ---
+  // --- Language Management (Toggle) ---
   function initLanguage() {
     function setLanguage(lang) {
       if (lang !== 'ko' && lang !== 'en') return;
@@ -166,12 +166,27 @@
       localStorage.setItem('lang', lang);
     }
 
+    function toggleLanguage() {
+      const current = document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'ko';
+      const next = current === 'ko' ? 'en' : 'ko';
+      setLanguage(next);
+    }
+
     document.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-set-lang], [data-post-lang]');
-      if (!btn) return;
-      const lang = btn.getAttribute('data-set-lang') || btn.getAttribute('data-post-lang');
-      if (lang) {
-        setLanguage(lang);
+      // 1. Language Toggle Button (next to Expand All & on post page)
+      const toggleBtn = e.target.closest('.lang-toggle-btn, #lang-toggle-btn');
+      if (toggleBtn) {
+        e.preventDefault();
+        toggleLanguage();
+        return;
+      }
+
+      // 2. Explicit direct language button (if any)
+      const explicitBtn = e.target.closest('[data-set-lang]');
+      if (explicitBtn) {
+        e.preventDefault();
+        const lang = explicitBtn.getAttribute('data-set-lang');
+        if (lang) setLanguage(lang);
       }
     });
   }

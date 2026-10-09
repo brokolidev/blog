@@ -104,7 +104,20 @@ function parseDateParts(dateStr) {
   };
 }
 
-// Helper: Common Header - 100% Identical metrics with brokolidev.com + Language Switcher
+// Strict Zero-Flash Bilingual CSS Guard (Inlined in head to eliminate caching issues)
+const CRITICAL_LANG_CSS = `
+  <style id="bilingual-guard-style">
+    /* Show ONLY active language, never both */
+    html[data-lang="ko"] .lang-en,
+    html:not([data-lang="en"]) .lang-en {
+      display: none !important;
+    }
+    html[data-lang="en"] .lang-ko {
+      display: none !important;
+    }
+  </style>`;
+
+// Helper: Common Header - 100% Identical metrics with brokolidev.com
 function getHeaderHtml(rootPrefix = '') {
   return `
   <!-- Ambient Background Light Effects (Identical to brokolidev.com) -->
@@ -121,7 +134,7 @@ function getHeaderHtml(rootPrefix = '') {
           <span>brokoli<span class="text-accent">.dev</span></span>
         </a>
 
-        <!-- Navigation Links, Language Switcher & Theme Toggle -->
+        <!-- Navigation Links & Theme Toggle -->
         <nav class="header-nav">
           <a href="https://brokolidev.com" class="nav-tab-inactive">
             <span>Profile</span>
@@ -129,13 +142,6 @@ function getHeaderHtml(rootPrefix = '') {
           <a href="${rootPrefix ? rootPrefix + 'index.html' : '/'}" class="nav-tab-active">
             <span>Blog</span>
           </a>
-
-          <!-- Language Switcher in Header -->
-          <div class="lang-switch-group" role="group" aria-label="Language selection">
-            <button type="button" class="lang-btn" data-set-lang="ko" title="한국어로 전환">KR</button>
-            <span class="lang-sep">/</span>
-            <button type="button" class="lang-btn" data-set-lang="en" title="Switch to English">EN</button>
-          </div>
 
           <!-- Theme Toggle -->
           <button type="button" id="theme-toggle" aria-label="Toggle theme" class="theme-btn">
@@ -307,7 +313,8 @@ async function build() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style.css?v=20261008b">
+  ${CRITICAL_LANG_CSS}
 
   <!-- Language & Theme Initialization (Zero Flash) -->
   <script>
@@ -355,10 +362,17 @@ async function build() {
   <main class="main-wrapper">
     <div class="main-outer">
       <div class="main-inner">
-        <a href="../index.html" class="nav-tab-active" style="margin-bottom: 2rem; display: inline-flex; gap: 0.4rem;">
-          <i class="fas fa-arrow-left" style="font-size: 0.75rem;"></i>
-          <span>Timeline</span>
-        </a>
+        <div class="post-top-nav" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <a href="../index.html" class="nav-tab-active" style="display: inline-flex; gap: 0.4rem;">
+            <i class="fas fa-arrow-left" style="font-size: 0.75rem;"></i>
+            <span>Timeline</span>
+          </a>
+          <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" aria-label="Toggle language">
+            <span class="lang-toggle-opt lang-opt-ko">KR</span>
+            <span class="lang-toggle-sep">/</span>
+            <span class="lang-toggle-opt lang-opt-en">EN</span>
+          </button>
+        </div>
 
         <article class="log-item is-open" style="border: none; background: transparent; box-shadow: none;">
           <div class="log-meta-strip" style="border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
@@ -370,11 +384,6 @@ async function build() {
               <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
               <span class="lang-ko">${post.ko.readTime}</span>
               <span class="lang-en">${post.en.readTime}</span>
-            </div>
-            <div class="post-lang-badge">
-              <button type="button" data-post-lang="ko" title="한국어로 읽기">KR</button>
-              <span style="opacity: 0.4;">/</span>
-              <button type="button" data-post-lang="en" title="Read in English">EN</button>
             </div>
           </div>
 
@@ -446,7 +455,8 @@ async function build() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261008b">
+  ${CRITICAL_LANG_CSS}
 
   <!-- Language & Theme Initialization (Zero Flash) -->
   <script>
@@ -505,7 +515,14 @@ async function build() {
               <div class="year-divider"></div>
               ${
                 yearIdx === 0
-                  ? `<button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>`
+                  ? `<div class="year-heading-actions">
+                       <button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>
+                       <button type="button" id="lang-toggle-btn" class="lang-toggle-btn" aria-label="Toggle language">
+                         <span class="lang-toggle-opt lang-opt-ko">KR</span>
+                         <span class="lang-toggle-sep">/</span>
+                         <span class="lang-toggle-opt lang-opt-en">EN</span>
+                       </button>
+                     </div>`
                   : ''
               }
             </div>
@@ -543,11 +560,6 @@ async function build() {
                       <span class="lang-en">Tags: ${post.en.tags.map((t) => `#${t}`).join(' ')}</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                      <div class="post-lang-badge">
-                        <button type="button" data-post-lang="ko" title="한국어로 읽기">KR</button>
-                        <span style="opacity: 0.4;">/</span>
-                        <button type="button" data-post-lang="en" title="Read in English">EN</button>
-                      </div>
                       <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy shareable link">
                         <i class="fas fa-link"></i> Link
                       </button>

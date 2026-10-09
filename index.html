@@ -46,7 +46,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261008b">
+  
+  <style id="bilingual-guard-style">
+    /* Show ONLY active language, never both */
+    html[data-lang="ko"] .lang-en,
+    html:not([data-lang="en"]) .lang-en {
+      display: none !important;
+    }
+    html[data-lang="en"] .lang-ko {
+      display: none !important;
+    }
+  </style>
 
   <!-- Language & Theme Initialization (Zero Flash) -->
   <script>
@@ -112,7 +123,7 @@
           <span>brokoli<span class="text-accent">.dev</span></span>
         </a>
 
-        <!-- Navigation Links, Language Switcher & Theme Toggle -->
+        <!-- Navigation Links & Theme Toggle -->
         <nav class="header-nav">
           <a href="https://brokolidev.com" class="nav-tab-inactive">
             <span>Profile</span>
@@ -120,13 +131,6 @@
           <a href="/" class="nav-tab-active">
             <span>Blog</span>
           </a>
-
-          <!-- Language Switcher in Header -->
-          <div class="lang-switch-group" role="group" aria-label="Language selection">
-            <button type="button" class="lang-btn" data-set-lang="ko" title="한국어로 전환">KR</button>
-            <span class="lang-sep">/</span>
-            <button type="button" class="lang-btn" data-set-lang="en" title="Switch to English">EN</button>
-          </div>
 
           <!-- Theme Toggle -->
           <button type="button" id="theme-toggle" aria-label="Toggle theme" class="theme-btn">
@@ -149,7 +153,14 @@
               <span class="year-title">2026</span>
               <span class="year-count-badge">1</span>
               <div class="year-divider"></div>
-              <button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>
+              <div class="year-heading-actions">
+                       <button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>
+                       <button type="button" id="lang-toggle-btn" class="lang-toggle-btn" aria-label="Toggle language">
+                         <span class="lang-toggle-opt lang-opt-ko">KR</span>
+                         <span class="lang-toggle-sep">/</span>
+                         <span class="lang-toggle-opt lang-opt-en">EN</span>
+                       </button>
+                     </div>
             </div>
 
             <div class="entries-list">
@@ -183,11 +194,6 @@
                       <span class="lang-en">Tags: #Essay #Blogging #Life</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                      <div class="post-lang-badge">
-                        <button type="button" data-post-lang="ko" title="한국어로 읽기">KR</button>
-                        <span style="opacity: 0.4;">/</span>
-                        <button type="button" data-post-lang="en" title="Read in English">EN</button>
-                      </div>
                       <button type="button" class="log-permalink-btn" data-slug="new-era" title="Copy shareable link">
                         <i class="fas fa-link"></i> Link
                       </button>
