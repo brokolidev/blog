@@ -41,6 +41,7 @@ function triggerRebuild(event, filename) {
 
 const contentDir = path.join(__dirname, 'content');
 const srcDir = path.join(__dirname, 'src');
+const publicDir = path.join(__dirname, 'public');
 
 if (fs.existsSync(contentDir)) {
   fs.watch(contentDir, { recursive: true }, triggerRebuild);
@@ -48,12 +49,16 @@ if (fs.existsSync(contentDir)) {
 if (fs.existsSync(srcDir)) {
   fs.watch(srcDir, { recursive: true }, triggerRebuild);
 }
+if (fs.existsSync(publicDir)) {
+  fs.watch(publicDir, { recursive: true }, triggerRebuild);
+}
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.js': 'application/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.svg': 'image/svg+xml',

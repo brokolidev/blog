@@ -3,8 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>brokoli.dev</title>
-  <meta name="description" content="Development logs and architectural notes by Ted Choi.">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Primary Meta Tags -->
+  <title>Blog - brokolidev</title>
+  <meta name="title" content="Blog - brokolidev">
+  <meta name="description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
+  <meta name="keywords" content="Ted Choi, Software Engineer, Full Stack, Laravel, TypeScript, Docker, Cloud, AI Developer, brokolidev, Engineering Blog, Worklog">
+  <meta name="author" content="Ted Choi">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://blog.brokolidev.com/">
+
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="brokolidev">
+  <meta property="og:title" content="Blog - brokolidev">
+  <meta property="og:description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
+  <meta property="og:url" content="https://blog.brokolidev.com/">
+  <meta property="og:image" content="https://brokolidev.com/img/profile.png">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Blog - brokolidev">
+  <meta name="twitter:description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
+  <meta name="twitter:image" content="https://brokolidev.com/img/profile.png">
+  <meta name="twitter:creator" content="@brokolidev">
+
+  
+  <!-- Favicons & Manifest -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon_io/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/favicon_io/apple-touch-icon.png">
+  <link rel="manifest" href="img/favicon_io/site.webmanifest">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://rsms.me/">
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -12,12 +47,41 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Theme Initialization -->
   <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
+  </script>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Blog - brokolidev",
+    "url": "https://blog.brokolidev.com/",
+    "description": "Engineering worklog, architecture retrospectives, and development notes by Ted Choi.",
+    "author": {
+      "@type": "Person",
+      "name": "Ted Choi",
+      "url": "https://brokolidev.com"
+    }
+  }
+  </script>
+
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-298RY09MR6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-298RY09MR6');
   </script>
 </head>
 <body>

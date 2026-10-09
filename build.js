@@ -35,6 +35,47 @@ marked.setOptions({ renderer });
 const POSTS_DIR = path.join(__dirname, 'content', 'posts');
 const DIST_DIR = path.join(__dirname, 'dist');
 const DIST_POSTS_DIR = path.join(DIST_DIR, 'posts');
+const PUBLIC_DIR = path.join(__dirname, 'public');
+
+// Google Analytics Tag (gtag.js)
+const GA_TAG_HTML = `
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-298RY09MR6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-298RY09MR6');
+  </script>`;
+
+// Helper: Common Favicons & Web Manifest
+function getFaviconHtml(rootPrefix = '') {
+  return `
+  <!-- Favicons & Manifest -->
+  <link rel="icon" type="image/x-icon" href="${rootPrefix}favicon.ico">
+  <link rel="shortcut icon" href="${rootPrefix}img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="${rootPrefix}img/favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="${rootPrefix}img/favicon_io/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="${rootPrefix}img/favicon_io/apple-touch-icon.png">
+  <link rel="manifest" href="${rootPrefix}img/favicon_io/site.webmanifest">`;
+}
+
+// Helper: Copy directory recursively
+function copyDirRecursive(src, dest) {
+  if (!fs.existsSync(src)) return;
+  fs.mkdirSync(dest, { recursive: true });
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+    if (entry.isDirectory()) {
+      copyDirRecursive(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
 
 // Helper: Format Date String
 function parseDateParts(dateStr) {
@@ -153,8 +194,38 @@ async function build() {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${post.title} — brokoli.dev</title>
-  <meta name="description" content="${post.excerpt}">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Primary Meta Tags -->
+  <title>${post.title} - Blog - brokolidev</title>
+  <meta name="title" content="${post.title} - Blog - brokolidev">
+  <meta name="description" content="${(post.excerpt || '').replace(/"/g, '&quot;')}">
+  <meta name="keywords" content="${[...post.tags, post.category, 'brokolidev', 'Engineering Worklog', 'Ted Choi'].join(', ')}">
+  <meta name="author" content="Ted Choi">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://blog.brokolidev.com/posts/${post.slug}.html">
+
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="brokolidev">
+  <meta property="og:title" content="${post.title} - Blog - brokolidev">
+  <meta property="og:description" content="${(post.excerpt || '').replace(/"/g, '&quot;')}">
+  <meta property="og:url" content="https://blog.brokolidev.com/posts/${post.slug}.html">
+  <meta property="og:image" content="https://brokolidev.com/img/profile.png">
+  <meta property="article:published_time" content="${post.date}">
+  <meta property="article:author" content="Ted Choi">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${post.title} - Blog - brokolidev">
+  <meta name="twitter:description" content="${(post.excerpt || '').replace(/"/g, '&quot;')}">
+  <meta name="twitter:image" content="https://brokolidev.com/img/profile.png">
+  <meta name="twitter:creator" content="@brokolidev">
+
+  ${getFaviconHtml('../')}
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://rsms.me/">
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -162,6 +233,8 @@ async function build() {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+
+  <!-- Theme Initialization -->
   <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
@@ -169,6 +242,25 @@ async function build() {
       document.documentElement.classList.remove('dark');
     }
   </script>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "${post.title.replace(/"/g, '\\"')}",
+    "datePublished": "${post.date}",
+    "description": "${(post.excerpt || '').replace(/"/g, '\\"')}",
+    "url": "https://blog.brokolidev.com/posts/${post.slug}.html",
+    "author": {
+      "@type": "Person",
+      "name": "Ted Choi",
+      "url": "https://brokolidev.com"
+    }
+  }
+  </script>
+
+  ${GA_TAG_HTML}
 </head>
 <body>
   ${getHeaderHtml('../')}
@@ -218,8 +310,36 @@ async function build() {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>brokoli.dev</title>
-  <meta name="description" content="Development logs and architectural notes by Ted Choi.">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Primary Meta Tags -->
+  <title>Blog - brokolidev</title>
+  <meta name="title" content="Blog - brokolidev">
+  <meta name="description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
+  <meta name="keywords" content="Ted Choi, Software Engineer, Full Stack, Laravel, TypeScript, Docker, Cloud, AI Developer, brokolidev, Engineering Blog, Worklog">
+  <meta name="author" content="Ted Choi">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://blog.brokolidev.com/">
+
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="brokolidev">
+  <meta property="og:title" content="Blog - brokolidev">
+  <meta property="og:description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
+  <meta property="og:url" content="https://blog.brokolidev.com/">
+  <meta property="og:image" content="https://brokolidev.com/img/profile.png">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Blog - brokolidev">
+  <meta name="twitter:description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
+  <meta name="twitter:image" content="https://brokolidev.com/img/profile.png">
+  <meta name="twitter:creator" content="@brokolidev">
+
+  ${getFaviconHtml('')}
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://rsms.me/">
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -227,6 +347,8 @@ async function build() {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Theme Initialization -->
   <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
@@ -234,6 +356,24 @@ async function build() {
       document.documentElement.classList.remove('dark');
     }
   </script>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Blog - brokolidev",
+    "url": "https://blog.brokolidev.com/",
+    "description": "Engineering worklog, architecture retrospectives, and development notes by Ted Choi.",
+    "author": {
+      "@type": "Person",
+      "name": "Ted Choi",
+      "url": "https://brokolidev.com"
+    }
+  }
+  </script>
+
+  ${GA_TAG_HTML}
 </head>
 <body>
   ${getHeaderHtml('')}
@@ -314,6 +454,10 @@ async function build() {
   fs.copyFileSync(path.join(__dirname, 'src', 'css', 'style.css'), path.join(DIST_DIR, 'css', 'style.css'));
   fs.copyFileSync(path.join(__dirname, 'src', 'js', 'main.js'), path.join(DIST_DIR, 'js', 'main.js'));
   fs.writeFileSync(path.join(__dirname, 'index.html'), timelineHtml, 'utf-8');
+
+  // Copy public assets (favicons, manifests, etc.) to dist and root
+  copyDirRecursive(PUBLIC_DIR, DIST_DIR);
+  copyDirRecursive(PUBLIC_DIR, __dirname);
 
   console.log(`✅ Worklog build complete! Processed ${posts.length} entries across ${sortedYears.length} years.`);
 }
