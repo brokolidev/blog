@@ -95,11 +95,6 @@ function getFooterHtml() {
   <footer class="site-footer">
     <div class="footer-inner">
       <p>© 2026 <strong>brokolidev.com</strong> · Ted Choi</p>
-      <div class="footer-links">
-        <a href="https://brokolidev.com">Profile</a>
-        <a href="https://github.com/brokolidev/blog" target="_blank" rel="noopener noreferrer">Repository</a>
-        <a href="https://linkedin.com/in/brokolidev" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      </div>
     </div>
   </footer>`;
 }

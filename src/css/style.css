@@ -708,32 +708,25 @@ html.dark .log-item.is-open {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: center;
   font-size: 0.75rem;
   font-family: var(--font-mono);
   color: var(--text-faint);
+  text-align: center;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .footer-inner {
+    padding: 0 2rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .footer-inner {
     max-width: 56rem;
+    padding: 0 3rem;
   }
-}
-
-.footer-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.footer-links a {
-  color: var(--text-muted);
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  color: var(--text-main);
 }
 
 /* Mobile Tweaks */
