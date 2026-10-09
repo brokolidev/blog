@@ -20,22 +20,22 @@ Designed to deploy seamlessly to **Cloudflare Pages** with unlimited bandwidth a
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started with Bun
 
 ### 1. Install Dependencies
 ```bash
-npm install
+bun install
 ```
 
 ### 2. Build Static Site
 ```bash
-npm run build
+bun run build
 # Compiles Markdown in content/posts/ into production HTML files in dist/
 ```
 
 ### 3. Local Development Preview
 ```bash
-npm run dev
+bun run dev
 # Starts local server at http://localhost:8080/
 ```
 Or open `dist/index.html` directly in your browser:
@@ -67,7 +67,7 @@ featured: false
 Your article content in standard Markdown format...
 ```
 
-Run `npm run build` to generate the new static page instantly.
+Run `bun run build` to generate the new static page instantly.
 
 ---
 
@@ -76,6 +76,6 @@ Run `npm run build` to generate the new static page instantly.
 Deploy via Cloudflare Pages using GitHub Actions or direct upload:
 
 ```bash
-npx wrangler pages deploy dist --project-name=brokolidev-blog
+bunx wrangler pages deploy dist --project-name=blog
 ```
 Custom Domain: `blog.brokolidev.com`
