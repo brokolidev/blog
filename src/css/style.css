@@ -249,6 +249,12 @@ html.dark .nav-tab-active {
   color: var(--text-main);
 }
 
+.lang-toggle-opt {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem;
+  transition: all 0.15s ease;
+}
+
 .lang-toggle-sep {
   opacity: 0.35;
   font-weight: 400;
@@ -259,23 +265,27 @@ html.dark .nav-tab-active {
 html[data-lang="ko"] .lang-toggle-btn .lang-opt-ko,
 html:not([data-lang="en"]) .lang-toggle-btn .lang-opt-ko {
   color: var(--accent);
+  background: rgba(20, 184, 166, 0.15);
   font-weight: 700;
 }
 
 html[data-lang="ko"] .lang-toggle-btn .lang-opt-en,
 html:not([data-lang="en"]) .lang-toggle-btn .lang-opt-en {
   color: var(--text-faint);
-  font-weight: 500;
+  font-weight: 400;
+  opacity: 0.6;
 }
 
 html[data-lang="en"] .lang-toggle-btn .lang-opt-en {
   color: var(--accent);
+  background: rgba(20, 184, 166, 0.15);
   font-weight: 700;
 }
 
 html[data-lang="en"] .lang-toggle-btn .lang-opt-ko {
   color: var(--text-faint);
-  font-weight: 500;
+  font-weight: 400;
+  opacity: 0.6;
 }
 
 /* Strict Single Language Display Visibility Rules */

@@ -139,15 +139,19 @@ function getHeadInitScript() {
     }
     document.documentElement.setAttribute('data-lang', activeLang);
 
-    // Global fail-safe language toggle (instant execution, zero cache-lag)
-    window.toggleAppLanguage = function () {
+    // Global fail-safe language toggle (instant execution, zero cache-lag, no double toggle)
+    window.toggleAppLanguage = function (e) {
+      if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+      }
       var html = document.documentElement;
       var cur = html.getAttribute('data-lang') === 'en' ? 'en' : 'ko';
       var next = cur === 'ko' ? 'en' : 'ko';
       html.setAttribute('data-lang', next);
       try {
         localStorage.setItem('lang', next);
-      } catch (e) {}
+      } catch (err) {}
     };
   </script>`;
 }
@@ -382,7 +386,7 @@ async function build() {
             <i class="fas fa-arrow-left" style="font-size: 0.75rem;"></i>
             <span>Timeline</span>
           </a>
-          <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" onclick="toggleAppLanguage()" aria-label="Toggle language">
+          <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" onclick="toggleAppLanguage(event)" aria-label="Toggle language">
             <span class="lang-toggle-opt lang-opt-ko">KR</span>
             <span class="lang-toggle-sep">/</span>
             <span class="lang-toggle-opt lang-opt-en">EN</span>
@@ -512,7 +516,7 @@ async function build() {
                 yearIdx === 0
                   ? `<div class="year-heading-actions">
                        <button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>
-                       <button type="button" id="lang-toggle-btn" class="lang-toggle-btn" onclick="toggleAppLanguage()" aria-label="Toggle language">
+                       <button type="button" id="lang-toggle-btn" class="lang-toggle-btn" onclick="toggleAppLanguage(event)" aria-label="Toggle language">
                          <span class="lang-toggle-opt lang-opt-ko">KR</span>
                          <span class="lang-toggle-sep">/</span>
                          <span class="lang-toggle-opt lang-opt-en">EN</span>

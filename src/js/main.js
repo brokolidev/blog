@@ -160,24 +160,15 @@
 
   // --- Language Management (Toggle) ---
   function initLanguage() {
-    function setLanguage(lang) {
-      if (lang !== 'ko' && lang !== 'en') return;
-      document.documentElement.setAttribute('data-lang', lang);
-      localStorage.setItem('lang', lang);
-    }
-
-    function toggleLanguage() {
-      const current = document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'ko';
-      const next = current === 'ko' ? 'en' : 'ko';
-      setLanguage(next);
-    }
-
+    // If inline onclick exists, let it handle directly to avoid double toggle
     document.addEventListener('click', (e) => {
-      // 1. Language Toggle Button (next to Expand All & on post page)
+      // 1. Language Toggle Button fallback (only if onclick is missing)
       const toggleBtn = e.target.closest('.lang-toggle-btn, #lang-toggle-btn');
-      if (toggleBtn) {
+      if (toggleBtn && !toggleBtn.hasAttribute('onclick')) {
         e.preventDefault();
-        toggleLanguage();
+        if (typeof window.toggleAppLanguage === 'function') {
+          window.toggleAppLanguage(e);
+        }
         return;
       }
 
@@ -186,7 +177,10 @@
       if (explicitBtn) {
         e.preventDefault();
         const lang = explicitBtn.getAttribute('data-set-lang');
-        if (lang) setLanguage(lang);
+        if (lang === 'ko' || lang === 'en') {
+          document.documentElement.setAttribute('data-lang', lang);
+          try { localStorage.setItem('lang', lang); } catch (err) {}
+        }
       }
     });
   }
