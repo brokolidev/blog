@@ -850,3 +850,48 @@ html.dark .log-item.is-open {
     justify-content: space-between;
   }
 }
+
+/* AI Translation Disclaimer Notice */
+.ai-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.625rem 0.875rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  background-color: rgba(244, 244, 245, 0.7);
+  border: 1px dashed rgba(161, 161, 170, 0.45);
+  color: #52525b;
+}
+
+html.dark .ai-disclaimer {
+  background-color: rgba(24, 24, 27, 0.6);
+  border-color: rgba(63, 63, 70, 0.6);
+  color: #a1a1aa;
+}
+
+.ai-disclaimer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.25rem;
+  background-color: rgba(14, 165, 233, 0.1);
+  color: #0284c7;
+  white-space: nowrap;
+}
+
+html.dark .ai-disclaimer-badge {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.ai-disclaimer-text {
+  flex: 1;
+}

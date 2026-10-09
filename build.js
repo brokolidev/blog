@@ -158,10 +158,26 @@ function getFooterHtml() {
   </footer>`;
 }
 
+// AI Translation Disclaimer notice for English versions
+const EN_DISCLAIMER_HTML = `
+<div class="ai-disclaimer" role="note">
+  <span class="ai-disclaimer-badge"><i class="fas fa-robot"></i> AI Translated</span>
+  <span class="ai-disclaimer-text">Please note that this post was translated by AI and may feel slightly awkward or unnatural. If you wish to experience the raw, genuine sentiment of my writing, you should probably learn Korean! 😉</span>
+</div>`;
+
+function formatEnContent(html) {
+  if (!html) return '';
+  if (html.includes('ai-disclaimer')) return html;
+  return `${EN_DISCLAIMER_HTML}\n${html}`;
+}
+
 // Build Pipeline
 async function build() {
   console.log('⚡️ Compiling minimalist bilingual Worklog...');
 
+  if (fs.existsSync(DIST_POSTS_DIR)) {
+    fs.rmSync(DIST_POSTS_DIR, { recursive: true, force: true });
+  }
   fs.mkdirSync(DIST_POSTS_DIR, { recursive: true });
   fs.mkdirSync(path.join(DIST_DIR, 'css'), { recursive: true });
   fs.mkdirSync(path.join(DIST_DIR, 'js'), { recursive: true });
@@ -373,7 +389,7 @@ async function build() {
             ${post.ko.html}
           </div>
           <div class="prose-content lang-en">
-            ${post.en.html}
+            ${formatEnContent(post.en.html)}
           </div>
         </article>
       </div>
@@ -542,7 +558,7 @@ async function build() {
                     ${post.ko.html}
                   </div>
                   <div class="prose-content lang-en">
-                    ${post.en.html}
+                    ${formatEnContent(post.en.html)}
                   </div>
                 </div>
               </div>`

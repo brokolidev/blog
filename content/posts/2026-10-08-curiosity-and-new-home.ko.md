@@ -1,11 +1,11 @@
 ---
-title: "관심사가 많은 사람의 새로운 보금자리"
-slug: "curiosity-and-new-home"
+title: "새로운 시대, 새로운 공간"
+slug: "new-era"
 date: "2026-10-08"
 lang: "ko"
 category: "Essay"
 tags: ["Essay", "Blogging", "Life"]
-excerpt: "정치, 경제, 사회, 예술까지 전 분야에 걸친 끝없는 호기심과 지적 갈증, 그리고 마침내 마련한 나만의 블로그 공간."
+excerpt: "정치, 경제, 사회, 예술까지 전 분야에 걸친 끝없는 호기심과 지적 갈증, 그리고 마침내 정착할 수 있을 것 같은 나만의 블로그 공간."
 author: "Ted Choi"
 readTime: "1 min"
 ---

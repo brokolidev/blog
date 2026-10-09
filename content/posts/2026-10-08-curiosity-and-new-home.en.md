@@ -1,14 +1,19 @@
 ---
-title: "A New Sanctuary for a Curious Mind"
-slug: "curiosity-and-new-home"
+title: "A New Era, A New Space"
+slug: "new-era"
 date: "2026-10-08"
 lang: "en"
 category: "Essay"
 tags: ["Essay", "Blogging", "Life"]
-excerpt: "From politics and economics to culture and the arts—embracing lifelong curiosity and building a permanent digital home of my own."
+excerpt: "From politics, economics, and society to the arts—boundless curiosity, intellectual thirst, and finally finding a blog space where I can settle down."
 author: "Ted Choi"
 readTime: "1 min"
 ---
+
+<div class="ai-disclaimer">
+  <span class="ai-disclaimer-badge"><i class="fas fa-robot"></i> AI Translated</span>
+  <span class="ai-disclaimer-text">Please note that this post was translated by AI and may feel slightly awkward or unnatural. If you truly wish to experience the raw, genuine sentiment and soul of my writing, you should probably learn Korean! 😉</span>
+</div>
 
 I have a wide range of interests. Politics, economics, culture, society, sports, art—almost every field fascinates me.
 
