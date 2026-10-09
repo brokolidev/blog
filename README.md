@@ -1,8 +1,6 @@
-# 🥦 brokoli.blog (blog.brokolidev.com)
+# blog.brokolidev.com
 
-A lightning-fast, zero-cost static developer blog built with pure **Markdown**, **Vanilla CSS**, and a lightweight **Node.js Static Site Generator (SSG)**.
-
-Designed to deploy seamlessly to **Cloudflare Pages** with unlimited bandwidth and sub-20ms global edge delivery.
+A lightning-fast, zero-cost static developer worklog and engineering blog built with pure **Markdown**, **Vanilla CSS**, and a lightweight **Bun Static Site Generator (SSG)**.
 
 ---
 
@@ -10,13 +8,12 @@ Designed to deploy seamlessly to **Cloudflare Pages** with unlimited bandwidth a
 
 - **Zero-Cost & Serverless**: No database, no server maintenance, 100% pre-rendered static HTML.
 - **Rich Aesthetics**:
-  - Matches the `brokolidev.com` signature aesthetic: Zinc 950 base, Teal-500 & Cyan accents, and subtle ambient light glow.
+  - Matches the `brokolidev.com` signature aesthetic: Zinc 950 base, Teal-500 accents, and subtle ambient light glow.
   - Interactive Dark/Light mode toggle with persistence in `localStorage`.
-  - Modern typography powered by Google Fonts (Inter & JetBrains Mono).
-- **Instant Search & Category Filter**: Client-side instant keyword filtering and category tag chips.
-- **Reading Progress Bar**: Dynamic scroll progress bar on all article pages.
+  - Modern typography powered by Inter & JetBrains Mono.
+- **Interactive Worklog Timeline**: Clean date & year-based collapsible worklog accordion.
 - **Code Block Enhancements**: Prism syntax highlighting for multiple languages with one-click code copy button.
-- **Conversational Publishing**: Add articles by creating `.md` files in `content/posts/` and running `node build.js`.
+- **Conversational Publishing**: Add articles by creating `.md` files in `content/posts/` and running `bun run build`.
 
 ---
 
@@ -54,12 +51,11 @@ Simply add a Markdown file inside `content/posts/YYYY-MM-DD-your-slug.md`:
 title: "Your Article Title"
 slug: "your-article-slug"
 date: "2026-10-09"
-category: "Cloud & DevOps"
-tags: ["Cloudflare", "Architecture"]
+category: "Engineering"
+tags: ["DevOps", "Architecture"]
 excerpt: "A concise summary of what this article covers."
 author: "Ted Choi"
-readTime: "3 min read"
-featured: false
+readTime: "3 min"
 ---
 
 ## First Heading
@@ -68,14 +64,3 @@ Your article content in standard Markdown format...
 ```
 
 Run `bun run build` to generate the new static page instantly.
-
----
-
-## 🌐 Cloudflare Pages Deployment
-
-Deploy via Cloudflare Pages using GitHub Actions or direct upload:
-
-```bash
-bunx wrangler pages deploy dist --project-name=blog
-```
-Custom Domain: `blog.brokolidev.com`
