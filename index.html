@@ -1,85 +1,105 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="h-full antialiased dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>brokoli.dev</title>
   <meta name="description" content="Development logs and architectural notes by Ted Choi.">
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
 </head>
 <body>
   
-  <header class="worklog-header">
-    <div class="worklog-container">
+  <!-- Ambient Background Light Effects (Identical to brokolidev.com) -->
+  <div class="ambient-glow" aria-hidden="true">
+    <div class="ambient-blob-1"></div>
+    <div class="ambient-blob-2"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="header-outer">
       <div class="header-inner">
-        <a href="index.html" class="header-brand">
-          <span>brokoli<span style="color: var(--accent);">.dev</span></span>
+        <!-- Brand / Logo -->
+        <a href="https://brokolidev.com" class="header-brand">
+          <span>brokoli<span class="text-accent">.dev</span></span>
         </a>
 
-        <div class="header-actions">
-          <button type="button" id="toggle-all-btn" class="toggle-all-btn">
-            Expand All
-          </button>
-          <a href="https://brokolidev.com" class="btn-ghost">
+        <!-- Navigation Links & Theme Toggle -->
+        <nav class="header-nav">
+          <a href="https://brokolidev.com" class="nav-tab-inactive">
             <span>Profile</span>
           </a>
-          <a href="https://github.com/brokolidev" target="_blank" rel="noopener noreferrer" class="btn-ghost" aria-label="GitHub">
-            <i class="fab fa-github"></i>
+          <a href="/" class="nav-tab-active">
+            <span>Blog</span>
           </a>
-          <button type="button" id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
-            <i class="fas fa-sun text-xs text-amber-400"></i>
+
+          <!-- Theme Toggle -->
+          <button type="button" id="theme-toggle" aria-label="Toggle theme" class="theme-btn">
+            <i class="fas fa-sun theme-icon-sun"></i>
+            <i class="fas fa-moon theme-icon-moon"></i>
           </button>
-        </div>
+        </nav>
       </div>
     </div>
   </header>
 
-  <main class="worklog-container" style="padding-top: 2.25rem;">
-    <!-- Timeline Sections by Year -->
-    <section class="worklog-timeline" style="padding-top: 0;">
-      
-      <div class="year-block" id="year-2026">
-        <div class="year-heading">
-          <span class="year-title">2026</span>
-          <span class="year-count-badge">2 logs</span>
-          <div class="year-divider"></div>
-        </div>
-
-        <div class="entries-list">
+  <main class="main-wrapper">
+    <div class="main-outer">
+      <div class="main-inner">
+        <!-- Timeline Sections by Year -->
+        <section class="worklog-timeline">
           
-          <div class="log-item" data-slug="zero-cost-serverless-blog-architecture">
-            <div class="log-summary">
-              <div class="log-summary-left">
-                <span class="log-date">10.08 <span style="font-size: 0.72rem; opacity: 0.75;">THU</span></span>
-                <span class="log-title">Zero-Cost Serverless Tech Blog with Markdown & Cloudflare Pages</span>
-                <div class="log-tags">
-                  <span class="log-tag">Cloud & DevOps</span>
-                </div>
-              </div>
-              <div class="log-summary-right">
-                <span class="log-readtime">4 min read</span>
-                <i class="fas fa-chevron-down log-chevron"></i>
-              </div>
+          <div class="year-block" id="year-2026">
+            <div class="year-heading">
+              <span class="year-title">2026</span>
+              <span class="year-count-badge">2</span>
+              <div class="year-divider"></div>
+              <button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>
             </div>
 
-            <div class="log-content">
-              <div class="log-meta-strip">
-                <div>
-                  <span>Full Date: <strong>2026-10-09</strong></span>
-                  <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
-                  <span>Tags: #Cloudflare #SSG #Markdown #Architecture</span>
+            <div class="entries-list">
+              
+              <div class="log-item" data-slug="zero-cost-serverless-blog-architecture">
+                <div class="log-summary">
+                  <div class="log-summary-left">
+                    <span class="log-date">10.08 <span style="font-size: 0.72rem; opacity: 0.75;">THU</span></span>
+                    <span class="log-title">Zero-Cost Serverless Tech Blog with Markdown & Cloudflare Pages</span>
+                    <div class="log-tags">
+                      <span class="log-tag">Cloud & DevOps</span>
+                    </div>
+                  </div>
+                  <div class="log-summary-right">
+                    <span class="log-readtime">4 min read</span>
+                    <i class="fas fa-chevron-down log-chevron"></i>
+                  </div>
                 </div>
-                <button type="button" class="log-permalink-btn" data-slug="zero-cost-serverless-blog-architecture" title="Copy shareable link">
-                  <i class="fas fa-link"></i> Link
-                </button>
-              </div>
 
-              <div class="prose-content">
-                <h2>Why Ditch Heavy Content Management Systems?</h2>
+                <div class="log-content">
+                  <div class="log-meta-strip">
+                    <div>
+                      <span>Full Date: <strong>2026-10-09</strong></span>
+                      <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
+                      <span>Tags: #Cloudflare #SSG #Markdown #Architecture</span>
+                    </div>
+                    <button type="button" class="log-permalink-btn" data-slug="zero-cost-serverless-blog-architecture" title="Copy shareable link">
+                      <i class="fas fa-link"></i> Link
+                    </button>
+                  </div>
+
+                  <div class="prose-content">
+                    <h2>Why Ditch Heavy Content Management Systems?</h2>
 <p>For years, developers defaulted to hosting traditional CMS platforms like WordPress or Ghost. While capable, they introduce unnecessary operational overhead:</p>
 <ul>
 <li><strong>Database Maintenance</strong>: Upgrades, automated backups, and connection pooling.</li>
@@ -120,38 +140,38 @@
 <h2>Conclusion &amp; Next Steps</h2>
 <p>This minimalist setup eliminates friction, guarantees high Lighthouse scores, and lets you focus on what truly matters: <strong>writing great technical content</strong>.</p>
 
-              </div>
-            </div>
-          </div>
-          <div class="log-item" data-slug="autonomous-coding-agents-and-future-of-work">
-            <div class="log-summary">
-              <div class="log-summary-left">
-                <span class="log-date">10.07 <span style="font-size: 0.72rem; opacity: 0.75;">WED</span></span>
-                <span class="log-title">Autonomous Coding Agents: Transforming Developer Velocity in 2026</span>
-                <div class="log-tags">
-                  <span class="log-tag">AI & Automation</span>
+                  </div>
                 </div>
               </div>
-              <div class="log-summary-right">
-                <span class="log-readtime">5 min read</span>
-                <i class="fas fa-chevron-down log-chevron"></i>
-              </div>
-            </div>
-
-            <div class="log-content">
-              <div class="log-meta-strip">
-                <div>
-                  <span>Full Date: <strong>2026-10-08</strong></span>
-                  <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
-                  <span>Tags: #AI #Autonomous Agents #Engineering #Productivity</span>
+              <div class="log-item" data-slug="autonomous-coding-agents-and-future-of-work">
+                <div class="log-summary">
+                  <div class="log-summary-left">
+                    <span class="log-date">10.07 <span style="font-size: 0.72rem; opacity: 0.75;">WED</span></span>
+                    <span class="log-title">Autonomous Coding Agents: Transforming Developer Velocity in 2026</span>
+                    <div class="log-tags">
+                      <span class="log-tag">AI & Automation</span>
+                    </div>
+                  </div>
+                  <div class="log-summary-right">
+                    <span class="log-readtime">5 min read</span>
+                    <i class="fas fa-chevron-down log-chevron"></i>
+                  </div>
                 </div>
-                <button type="button" class="log-permalink-btn" data-slug="autonomous-coding-agents-and-future-of-work" title="Copy shareable link">
-                  <i class="fas fa-link"></i> Link
-                </button>
-              </div>
 
-              <div class="prose-content">
-                <h2>The Paradigm Shift: From Autocomplete to Delegation</h2>
+                <div class="log-content">
+                  <div class="log-meta-strip">
+                    <div>
+                      <span>Full Date: <strong>2026-10-08</strong></span>
+                      <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
+                      <span>Tags: #AI #Autonomous Agents #Engineering #Productivity</span>
+                    </div>
+                    <button type="button" class="log-permalink-btn" data-slug="autonomous-coding-agents-and-future-of-work" title="Copy shareable link">
+                      <i class="fas fa-link"></i> Link
+                    </button>
+                  </div>
+
+                  <div class="prose-content">
+                    <h2>The Paradigm Shift: From Autocomplete to Delegation</h2>
 <p>In 2023, developers used AI primarily as an inline tab-completion assistant. By late 2026, the industry has fundamentally pivoted to <strong>Autonomous Goal-Oriented Agents</strong>.</p>
 <p>Rather than asking for small snippets, modern software engineering revolves around:</p>
 <blockquote>
@@ -186,49 +206,50 @@
 </ul>
 <p>The future of software belongs to engineers who can orchestrate fleets of specialized agents with precision and creativity.</p>
 
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="year-block" id="year-2025">
-        <div class="year-heading">
-          <span class="year-title">2025</span>
-          <span class="year-count-badge">1 logs</span>
-          <div class="year-divider"></div>
-        </div>
-
-        <div class="entries-list">
-          
-          <div class="log-item" data-slug="infrastructure-standardization-docker">
-            <div class="log-summary">
-              <div class="log-summary-left">
-                <span class="log-date">11.19 <span style="font-size: 0.72rem; opacity: 0.75;">WED</span></span>
-                <span class="log-title">Infrastructure Standardization with Multi-Container Docker</span>
-                <div class="log-tags">
-                  <span class="log-tag">DevOps</span>
-                </div>
-              </div>
-              <div class="log-summary-right">
-                <span class="log-readtime">3 min</span>
-                <i class="fas fa-chevron-down log-chevron"></i>
-              </div>
+          <div class="year-block" id="year-2025">
+            <div class="year-heading">
+              <span class="year-title">2025</span>
+              <span class="year-count-badge">1</span>
+              <div class="year-divider"></div>
+              
             </div>
 
-            <div class="log-content">
-              <div class="log-meta-strip">
-                <div>
-                  <span>Full Date: <strong>2025-11-20</strong></span>
-                  <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
-                  <span>Tags: #Docker #Nginx #Infrastructure</span>
+            <div class="entries-list">
+              
+              <div class="log-item" data-slug="infrastructure-standardization-docker">
+                <div class="log-summary">
+                  <div class="log-summary-left">
+                    <span class="log-date">11.19 <span style="font-size: 0.72rem; opacity: 0.75;">WED</span></span>
+                    <span class="log-title">Infrastructure Standardization with Multi-Container Docker</span>
+                    <div class="log-tags">
+                      <span class="log-tag">DevOps</span>
+                    </div>
+                  </div>
+                  <div class="log-summary-right">
+                    <span class="log-readtime">3 min</span>
+                    <i class="fas fa-chevron-down log-chevron"></i>
+                  </div>
                 </div>
-                <button type="button" class="log-permalink-btn" data-slug="infrastructure-standardization-docker" title="Copy shareable link">
-                  <i class="fas fa-link"></i> Link
-                </button>
-              </div>
 
-              <div class="prose-content">
-                <h2>Eliminating Environment Drift</h2>
+                <div class="log-content">
+                  <div class="log-meta-strip">
+                    <div>
+                      <span>Full Date: <strong>2025-11-20</strong></span>
+                      <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
+                      <span>Tags: #Docker #Nginx #Infrastructure</span>
+                    </div>
+                    <button type="button" class="log-permalink-btn" data-slug="infrastructure-standardization-docker" title="Copy shareable link">
+                      <i class="fas fa-link"></i> Link
+                    </button>
+                  </div>
+
+                  <div class="prose-content">
+                    <h2>Eliminating Environment Drift</h2>
 <p>Before unifying our stacks with Docker, onboarding new developers often took days due to mismatched PHP extensions, MySQL version mismatches, and varying local Nginx configurations.</p>
 <h3>Key Milestones Achieved</h3>
 <ul>
@@ -238,24 +259,24 @@
 </ul>
 <pre><code class="language-bash"><span class="token comment"># Spin up reproducible development environment</span>
 <span class="token function">docker</span> compose up <span class="token parameter variable">-d</span> <span class="token parameter variable">--build</span></code></pre>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
-    </section>
+    </div>
   </main>
 
   
-  <footer class="worklog-footer">
-    <div class="worklog-container">
-      <div class="footer-inner">
-        <p>© 2026 <strong>brokolidev</strong>. Minimalist engineering worklog.</p>
-        <div class="footer-links">
-          <a href="https://brokolidev.com">Profile</a>
-          <a href="https://github.com/brokolidev/blog" target="_blank">Repository</a>
-          <a href="https://linkedin.com/in/brokolidev" target="_blank">LinkedIn</a>
-        </div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 <strong>brokolidev.com</strong> · Ted Choi</p>
+      <div class="footer-links">
+        <a href="https://brokolidev.com">Profile</a>
+        <a href="https://github.com/brokolidev/blog" target="_blank" rel="noopener noreferrer">Repository</a>
+        <a href="https://linkedin.com/in/brokolidev" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       </div>
     </div>
   </footer>

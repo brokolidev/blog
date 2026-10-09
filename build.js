@@ -36,7 +36,7 @@ const POSTS_DIR = path.join(__dirname, 'content', 'posts');
 const DIST_DIR = path.join(__dirname, 'dist');
 const DIST_POSTS_DIR = path.join(DIST_DIR, 'posts');
 
-// Helper: Format Date String to Year, MonthDay, and Weekday
+// Helper: Format Date String
 function parseDateParts(dateStr) {
   const d = new Date(dateStr);
   const year = d.getFullYear() || 2026;
@@ -52,31 +52,38 @@ function parseDateParts(dateStr) {
   };
 }
 
-// Helper: Common Header
+// Helper: Common Header - 100% Identical metrics with brokolidev.com
 function getHeaderHtml(rootPrefix = '') {
-  const homeLink = rootPrefix ? `${rootPrefix}index.html` : 'index.html';
   return `
-  <header class="worklog-header">
-    <div class="worklog-container">
+  <!-- Ambient Background Light Effects (Identical to brokolidev.com) -->
+  <div class="ambient-glow" aria-hidden="true">
+    <div class="ambient-blob-1"></div>
+    <div class="ambient-blob-2"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="header-outer">
       <div class="header-inner">
-        <a href="${homeLink}" class="header-brand">
-          <span>brokoli<span style="color: var(--accent);">.dev</span></span>
+        <!-- Brand / Logo -->
+        <a href="https://brokolidev.com" class="header-brand">
+          <span>brokoli<span class="text-accent">.dev</span></span>
         </a>
 
-        <div class="header-actions">
-          <button type="button" id="toggle-all-btn" class="toggle-all-btn">
-            Expand All
-          </button>
-          <a href="https://brokolidev.com" class="btn-ghost">
+        <!-- Navigation Links & Theme Toggle -->
+        <nav class="header-nav">
+          <a href="https://brokolidev.com" class="nav-tab-inactive">
             <span>Profile</span>
           </a>
-          <a href="https://github.com/brokolidev" target="_blank" rel="noopener noreferrer" class="btn-ghost" aria-label="GitHub">
-            <i class="fab fa-github"></i>
+          <a href="${rootPrefix ? rootPrefix + 'index.html' : '/'}" class="nav-tab-active">
+            <span>Blog</span>
           </a>
-          <button type="button" id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
-            <i class="fas fa-sun text-xs text-amber-400"></i>
+
+          <!-- Theme Toggle -->
+          <button type="button" id="theme-toggle" aria-label="Toggle theme" class="theme-btn">
+            <i class="fas fa-sun theme-icon-sun"></i>
+            <i class="fas fa-moon theme-icon-moon"></i>
           </button>
-        </div>
+        </nav>
       </div>
     </div>
   </header>`;
@@ -85,15 +92,13 @@ function getHeaderHtml(rootPrefix = '') {
 // Helper: Common Footer
 function getFooterHtml() {
   return `
-  <footer class="worklog-footer">
-    <div class="worklog-container">
-      <div class="footer-inner">
-        <p>© 2026 <strong>brokolidev</strong>. Minimalist engineering worklog.</p>
-        <div class="footer-links">
-          <a href="https://brokolidev.com">Profile</a>
-          <a href="https://github.com/brokolidev/blog" target="_blank">Repository</a>
-          <a href="https://linkedin.com/in/brokolidev" target="_blank">LinkedIn</a>
-        </div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 <strong>brokolidev.com</strong> · Ted Choi</p>
+      <div class="footer-links">
+        <a href="https://brokolidev.com">Profile</a>
+        <a href="https://github.com/brokolidev/blog" target="_blank" rel="noopener noreferrer">Repository</a>
+        <a href="https://linkedin.com/in/brokolidev" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       </div>
     </div>
   </footer>`;
@@ -146,49 +151,62 @@ async function build() {
   }
   const sortedYears = Object.keys(yearGroups).sort((a, b) => Number(b) - Number(a));
 
-  // 1. Generate Individual Standalone Post Pages (for direct deep-linking)
+  // 1. Generate Individual Standalone Post Pages
   for (const post of posts) {
     const postHtml = `<!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="h-full antialiased dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${post.title} — brokoli.dev/worklog</title>
+  <title>${post.title} — brokoli.dev</title>
   <meta name="description" content="${post.excerpt}">
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
 </head>
 <body>
   ${getHeaderHtml('../')}
 
-  <main class="worklog-container" style="padding-top: 3rem; padding-bottom: 5rem;">
-    <a href="../index.html" class="btn-ghost" style="margin-bottom: 2rem; display: inline-flex;">
-      <i class="fas fa-arrow-left text-xs"></i>
-      <span>Back to Timeline</span>
-    </a>
+  <main class="main-wrapper">
+    <div class="main-outer">
+      <div class="main-inner">
+        <a href="../index.html" class="nav-tab-active" style="margin-bottom: 2rem; display: inline-flex; gap: 0.4rem;">
+          <i class="fas fa-arrow-left" style="font-size: 0.75rem;"></i>
+          <span>Timeline</span>
+        </a>
 
-    <article class="log-item is-open" style="border: none; background: transparent; box-shadow: none;">
-      <div class="log-meta-strip" style="border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
-        <div>
-          <span class="log-date" style="font-size: 0.9rem;">${post.date}</span>
-          <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
-          <span class="log-tag">${post.category}</span>
-          <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
-          <span>${post.readTime}</span>
-        </div>
+        <article class="log-item is-open" style="border: none; background: transparent; box-shadow: none;">
+          <div class="log-meta-strip" style="border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+            <div>
+              <span class="log-date" style="font-size: 0.9rem;">${post.date}</span>
+              <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
+              <span class="log-tag">${post.category}</span>
+              <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
+              <span>${post.readTime}</span>
+            </div>
+          </div>
+
+          <h1 style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text-main);">
+            ${post.title}
+          </h1>
+
+          <div class="prose-content">
+            ${post.html}
+          </div>
+        </article>
       </div>
-
-      <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text-main);">
-        ${post.title}
-      </h1>
-
-      <div class="prose-content">
-        ${post.html}
-      </div>
-    </article>
+    </div>
   </main>
 
   ${getFooterHtml()}
@@ -200,80 +218,96 @@ async function build() {
   }
 
   // 2. Generate Worklog Timeline Index Page
-  const latestDate = posts.length > 0 ? posts[0].date : 'Today';
-
   const timelineHtml = `<!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="h-full antialiased dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>brokoli.dev</title>
   <meta name="description" content="Development logs and architectural notes by Ted Choi.">
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
 </head>
 <body>
   ${getHeaderHtml('')}
 
-  <main class="worklog-container" style="padding-top: 2.25rem;">
-    <!-- Timeline Sections by Year -->
-    <section class="worklog-timeline" style="padding-top: 0;">
-      ${sortedYears
-        .map(
-          (year) => `
-      <div class="year-block" id="year-${year}">
-        <div class="year-heading">
-          <span class="year-title">${year}</span>
-          <span class="year-count-badge">${yearGroups[year].length} logs</span>
-          <div class="year-divider"></div>
-        </div>
-
-        <div class="entries-list">
-          ${yearGroups[year]
+  <main class="main-wrapper">
+    <div class="main-outer">
+      <div class="main-inner">
+        <!-- Timeline Sections by Year -->
+        <section class="worklog-timeline">
+          ${sortedYears
             .map(
-              (post, idx) => `
-          <div class="log-item" data-slug="${post.slug}">
-            <div class="log-summary">
-              <div class="log-summary-left">
-                <span class="log-date">${post.dateMeta.monthDay} <span style="font-size: 0.72rem; opacity: 0.75;">${post.dateMeta.weekday}</span></span>
-                <span class="log-title">${post.title}</span>
-                <div class="log-tags">
-                  <span class="log-tag">${post.category}</span>
-                </div>
-              </div>
-              <div class="log-summary-right">
-                <span class="log-readtime">${post.readTime}</span>
-                <i class="fas fa-chevron-down log-chevron"></i>
-              </div>
+              (year, yearIdx) => `
+          <div class="year-block" id="year-${year}">
+            <div class="year-heading">
+              <span class="year-title">${year}</span>
+              <span class="year-count-badge">${yearGroups[year].length}</span>
+              <div class="year-divider"></div>
+              ${
+                yearIdx === 0
+                  ? `<button type="button" id="toggle-all-btn" class="toggle-all-btn">Expand All</button>`
+                  : ''
+              }
             </div>
 
-            <div class="log-content">
-              <div class="log-meta-strip">
-                <div>
-                  <span>Full Date: <strong>${post.date}</strong></span>
-                  <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
-                  <span>Tags: ${post.tags.map((t) => `#${t}`).join(' ')}</span>
+            <div class="entries-list">
+              ${yearGroups[year]
+                .map(
+                  (post) => `
+              <div class="log-item" data-slug="${post.slug}">
+                <div class="log-summary">
+                  <div class="log-summary-left">
+                    <span class="log-date">${post.dateMeta.monthDay} <span style="font-size: 0.72rem; opacity: 0.75;">${post.dateMeta.weekday}</span></span>
+                    <span class="log-title">${post.title}</span>
+                    <div class="log-tags">
+                      <span class="log-tag">${post.category}</span>
+                    </div>
+                  </div>
+                  <div class="log-summary-right">
+                    <span class="log-readtime">${post.readTime}</span>
+                    <i class="fas fa-chevron-down log-chevron"></i>
+                  </div>
                 </div>
-                <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy shareable link">
-                  <i class="fas fa-link"></i> Link
-                </button>
-              </div>
 
-              <div class="prose-content">
-                ${post.html}
-              </div>
+                <div class="log-content">
+                  <div class="log-meta-strip">
+                    <div>
+                      <span>Full Date: <strong>${post.date}</strong></span>
+                      <span style="margin: 0 0.5rem; opacity: 0.5;">•</span>
+                      <span>Tags: ${post.tags.map((t) => `#${t}`).join(' ')}</span>
+                    </div>
+                    <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy shareable link">
+                      <i class="fas fa-link"></i> Link
+                    </button>
+                  </div>
+
+                  <div class="prose-content">
+                    ${post.html}
+                  </div>
+                </div>
+              </div>`
+                )
+                .join('')}
             </div>
           </div>`
             )
             .join('')}
-        </div>
-      </div>`
-        )
-        .join('')}
-    </section>
+        </section>
+      </div>
+    </div>
   </main>
 
   ${getFooterHtml()}

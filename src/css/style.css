@@ -1,43 +1,42 @@
 /* ==========================================================================
-   brokoli.log - Engineering Worklog Design System
-   Inspired by Tailwind UI Catalyst & Modern Minimalist Developer Logs
-   High Contrast, Zinc 950 Monotone, Year/Date Timeline Accordion
+   brokoli.dev - Shared Design Tokens & Worklog Layout
+   Pixel-perfect alignment with brokolidev.com header & container grid
    ========================================================================== */
 
 :root {
-  /* Color Tokens - Light */
-  --bg-page: #ffffff;
-  --bg-subtle: #f8fafc;
-  --bg-surface: #f1f5f9;
-  --bg-surface-hover: #e2e8f0;
+  /* Light Theme */
+  --bg-page: #fafafa;
+  --bg-subtle: #ffffff;
+  --bg-surface: #f4f4f5;
+  --bg-surface-hover: #e4e4e7;
   
-  --border-subtle: #e2e8f0;
-  --border-default: #cbd5e1;
-  --border-strong: #94a3b8;
+  --border-subtle: #e4e4e7;
+  --border-default: #d4d4d8;
+  --border-strong: #a1a1aa;
   
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --text-faint: #64748b;
+  --text-main: #18181b;
+  --text-muted: #52525b;
+  --text-faint: #71717a;
   
-  --accent: #0f766e;
+  --accent: #0d9488;
   --accent-light: #14b8a6;
   --accent-surface: #f0fdfa;
-  --accent-border: #ccfbf1;
+  --accent-border: rgba(13, 148, 136, 0.2);
   
-  --timeline-line: #cbd5e1;
-  --timeline-dot: #0f766e;
+  --timeline-line: #e4e4e7;
+  --timeline-dot: #0d9488;
   
-  --code-bg: #0f172a;
-  --code-text: #f8fafc;
-  --code-inline-bg: #f1f5f9;
-  --code-inline-text: #0f766e;
+  --code-bg: #18181b;
+  --code-text: #f4f4f5;
+  --code-inline-bg: #f4f4f5;
+  --code-inline-text: #0d9488;
   
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter var', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
 }
 
 html.dark {
-  /* Color Tokens - Dark (Tailwind Catalyst Zinc 950) */
+  /* Dark Theme - Tailwind Zinc 950 (Identical to brokolidev.com) */
   --bg-page: #09090b;
   --bg-subtle: #121215;
   --bg-surface: #18181b;
@@ -74,14 +73,14 @@ html.dark {
 
 html {
   font-family: var(--font-sans);
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.5;
   background-color: var(--bg-page);
   color: var(--text-main);
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 body {
@@ -90,160 +89,332 @@ body {
   flex-direction: column;
 }
 
-/* Layout */
-.worklog-container {
+/* ==========================================================================
+   Header & Navbar - 100% Identical Grid & Metrics with brokolidev.com
+   ========================================================================== */
+.site-header {
+  position: relative;
+  z-index: 50;
   width: 100%;
-  max-width: 860px;
+}
+
+.header-outer {
+  max-width: 80rem; /* max-w-7xl */
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 1.5rem 1rem 0; /* pt-6 px-4 */
 }
 
-/* Minimalist Header */
-.worklog-header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background: var(--bg-page);
-  border-bottom: 1px solid var(--border-subtle);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background-color: rgba(9, 9, 11, 0.85);
+@media (min-width: 640px) {
+  .header-outer {
+    padding-left: 2rem; /* sm:px-8 */
+    padding-right: 2rem;
+  }
 }
 
-html:not(.dark) .worklog-header {
-  background-color: rgba(255, 255, 255, 0.85);
+@media (min-width: 1024px) {
+  .header-outer {
+    padding-left: 3rem; /* lg:px-12 */
+    padding-right: 3rem;
+  }
 }
 
 .header-inner {
+  max-width: 42rem; /* max-w-2xl */
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 58px;
 }
 
+@media (min-width: 1024px) {
+  .header-inner {
+    max-width: 56rem; /* lg:max-w-4xl */
+  }
+}
+
+/* Brand Link */
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  text-decoration: none;
-  color: var(--text-main);
   font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: -0.01em;
+  font-size: 1rem; /* text-base */
+  letter-spacing: -0.025em; /* tracking-tight */
+  color: var(--text-main);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
 }
 
 .header-brand:hover {
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
-.badge-log {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
-  background: var(--accent-surface);
+.text-accent {
   color: var(--accent);
-  border: 1px solid var(--accent-border);
+  font-weight: 600;
 }
 
-.header-actions {
+/* Navigation Links */
+.header-nav {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.375rem; /* gap-1.5 */
 }
 
-.btn-ghost {
+@media (min-width: 640px) {
+  .header-nav {
+    gap: 0.5rem; /* sm:gap-2 */
+  }
+}
+
+/* Inactive nav button / link */
+.nav-tab-inactive {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.7rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
+  padding: 0.375rem 0.75rem; /* px-3 py-1.5 */
+  border-radius: 0.5rem; /* rounded-lg */
+  font-size: 0.8125rem; /* text-xs in brokolidev */
+  line-height: 1.5rem;
   font-weight: 500;
-  color: var(--text-muted);
   text-decoration: none;
-  background: transparent;
+  color: #52525b; /* zinc-600 */
   border: 1px solid transparent;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
-.btn-ghost:hover {
-  color: var(--text-main);
-  background: var(--bg-surface);
-  border-color: var(--border-subtle);
+.nav-tab-inactive:hover {
+  color: #18181b; /* zinc-900 */
+  background-color: #f4f4f5; /* zinc-100 */
 }
 
+html.dark .nav-tab-inactive {
+  color: #a1a1aa; /* zinc-400 */
+}
+
+html.dark .nav-tab-inactive:hover {
+  color: #f4f4f5; /* zinc-100 */
+  background-color: rgba(39, 39, 42, 0.8); /* zinc-800/80 */
+}
+
+/* Active nav badge / pill */
+.nav-tab-active {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem; /* px-3 py-1.5 */
+  border-radius: 0.5rem; /* rounded-lg */
+  font-size: 0.8125rem; /* text-xs in brokolidev */
+  line-height: 1.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #0f766e; /* teal-700 */
+  background-color: #f0fdfa; /* teal-50 */
+  border: 1px solid rgba(153, 246, 228, 0.8); /* teal-200/80 */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-2xs */
+  transition: all 0.2s ease;
+}
+
+html.dark .nav-tab-active {
+  color: #5eead4; /* teal-300 */
+  background-color: rgba(19, 78, 74, 0.4); /* teal-950/40 */
+  border-color: rgba(20, 184, 166, 0.3); /* teal-500/30 */
+}
+
+/* Theme Toggle Button - Exact metrics with brokolidev.com */
 .theme-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  color: var(--text-muted);
+  width: 2rem; /* h-8 w-8 */
+  height: 2rem;
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid #e4e4e7; /* border-zinc-200 */
+  background-color: #ffffff;
+  color: #52525b; /* zinc-600 */
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .theme-btn:hover {
-  color: var(--text-main);
-  border-color: var(--border-default);
-  background: var(--bg-surface-hover);
+  transform: translateY(-2px);
+  border-color: #d4d4d8; /* border-zinc-300 */
+  color: #18181b; /* zinc-900 */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.toggle-all-btn {
-  font-family: var(--font-mono);
+.theme-btn:active {
+  transform: scale(0.95);
+}
+
+html.dark .theme-btn {
+  background-color: #18181b; /* zinc-900 */
+  border-color: #27272a; /* zinc-800 */
+  color: #a1a1aa; /* zinc-400 */
+}
+
+html.dark .theme-btn:hover {
+  border-color: #3f3f46; /* zinc-700 */
+  color: #f4f4f5; /* zinc-100 */
+}
+
+.theme-icon-sun {
+  display: none;
+  color: #fbbf24; /* text-amber-400 */
   font-size: 0.75rem;
-  padding: 0.3rem 0.65rem;
-  border-radius: 5px;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.15s ease;
 }
 
-.toggle-all-btn:hover {
-  color: var(--text-main);
-  border-color: var(--border-default);
-  background: var(--bg-surface-hover);
+.theme-icon-moon {
+  display: block;
+  color: #52525b;
+  font-size: 0.75rem;
 }
 
-/* Timeline Layout */
-.worklog-timeline {
-  padding: 2.5rem 0 5rem;
+html.dark .theme-icon-sun {
+  display: block;
 }
 
-/* Year Block */
+html.dark .theme-icon-moon {
+  display: none;
+}
+
+/* ==========================================================================
+   Ambient Background Light Effects (Identical to brokolidev.com)
+   ========================================================================== */
+.ambient-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -10;
+  overflow: hidden;
+}
+
+.ambient-blob-1 {
+  position: absolute;
+  top: -9rem; /* -top-36 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.2), rgba(99, 102, 241, 0.15), transparent);
+  filter: blur(48px);
+  border-radius: 9999px;
+  animation: floatSlow 14s ease-in-out infinite;
+}
+
+html.dark .ambient-blob-1 {
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.1), rgba(6, 182, 212, 0.05), transparent);
+}
+
+.ambient-blob-2 {
+  position: absolute;
+  top: 24rem; /* top-96 */
+  right: -6rem; /* -right-24 */
+  width: 480px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.1), transparent);
+  filter: blur(48px);
+  border-radius: 9999px;
+  animation: floatReverse 16s ease-in-out infinite;
+}
+
+html.dark .ambient-blob-2 {
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent);
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateX(-50%) translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) translate(30px, -20px) scale(1.08);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-25px, 25px) scale(0.95);
+  }
+}
+
+/* ==========================================================================
+   Main Content Layout - Exactly Aligned to 56rem (lg:max-w-4xl) Grid
+   ========================================================================== */
+.main-wrapper {
+  flex: 1 1 auto;
+}
+
+.main-outer {
+  max-width: 80rem; /* max-w-7xl */
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem; /* mt-6 */
+}
+
+@media (min-width: 640px) {
+  .main-outer {
+    padding: 2.5rem 2rem 4rem; /* sm:mt-10 sm:px-8 */
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-outer {
+    padding-left: 3rem; /* lg:px-12 */
+    padding-right: 3rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .main-outer {
+    padding-left: 2rem; /* sm:px-8 */
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-outer {
+    padding-left: 3rem; /* lg:px-12 */
+    padding-right: 3rem;
+  }
+}
+
+.main-inner {
+  max-width: 42rem; /* max-w-2xl */
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .main-inner {
+    max-width: 56rem; /* lg:max-w-4xl */
+  }
+}
+
+/* ==========================================================================
+   Worklog Timeline & Accordion Components
+   ========================================================================== */
 .year-block {
-  margin-bottom: 3.5rem;
+  margin-bottom: 3rem;
 }
 
 .year-heading {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  cursor: pointer;
-  user-select: none;
+  margin-bottom: 1.25rem;
 }
 
 .year-title {
-  font-size: 1.35rem;
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  font-family: var(--font-mono);
   color: var(--text-main);
 }
 
 .year-count-badge {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  padding: 0.15rem 0.5rem;
-  border-radius: 12px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 9999px;
   background: var(--bg-surface);
   color: var(--text-faint);
   border: 1px solid var(--border-subtle);
@@ -255,7 +426,27 @@ html:not(.dark) .worklog-header {
   background: var(--border-subtle);
 }
 
-/* Entries Container with Left Vertical Line */
+.toggle-all-btn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.toggle-all-btn:hover {
+  color: var(--text-main);
+  border-color: var(--border-default);
+  background: var(--bg-surface-hover);
+}
+
+/* Timeline Left Vertical Line */
 .entries-list {
   position: relative;
   padding-left: 1.75rem;
@@ -263,14 +454,14 @@ html:not(.dark) .worklog-header {
   margin-left: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 /* Individual Log Item */
 .log-item {
   position: relative;
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: var(--bg-subtle);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
@@ -284,7 +475,7 @@ html:not(.dark) .worklog-header {
 .log-item.is-open {
   border-color: var(--accent-border);
   background: var(--bg-surface);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
 }
 
 html.dark .log-item.is-open {
@@ -296,7 +487,7 @@ html.dark .log-item.is-open {
   content: '';
   position: absolute;
   left: -2.35rem;
-  top: 1.15rem;
+  top: 1.05rem;
   width: 9px;
   height: 9px;
   border-radius: 50%;
@@ -311,13 +502,13 @@ html.dark .log-item.is-open {
   transform: scale(1.3);
 }
 
-/* Clickable Log Header / Summary Bar */
+/* Clickable Summary Bar */
 .log-summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.9rem 1.1rem;
+  padding: 0.85rem 1rem;
   cursor: pointer;
   user-select: none;
 }
@@ -325,7 +516,7 @@ html.dark .log-item.is-open {
 .log-summary-left {
   display: flex;
   align-items: baseline;
-  gap: 0.85rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
   flex-grow: 1;
 }
@@ -339,16 +530,10 @@ html.dark .log-item.is-open {
 }
 
 .log-title {
-  font-size: 0.975rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-main);
   letter-spacing: -0.01em;
-}
-
-.log-tags {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
 }
 
 .log-tag {
@@ -377,7 +562,7 @@ html.dark .log-item.is-open {
 .log-chevron {
   font-size: 0.75rem;
   color: var(--text-muted);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .log-item.is-open .log-chevron {
@@ -388,26 +573,20 @@ html.dark .log-item.is-open {
 /* Collapsible Content Area */
 .log-content {
   display: none;
-  padding: 0 1.25rem 1.5rem;
+  padding: 0 1.25rem 1.25rem;
   border-top: 1px solid var(--border-subtle);
-  animation: fadeIn 0.2s ease-out;
 }
 
 .log-item.is-open .log-content {
   display: block;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 .log-meta-strip {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.85rem 0;
-  margin-bottom: 1rem;
+  padding: 0.75rem 0;
+  margin-bottom: 0.85rem;
   border-bottom: 1px dashed var(--border-subtle);
   font-size: 0.8rem;
   color: var(--text-faint);
@@ -433,7 +612,7 @@ html.dark .log-item.is-open {
   border-color: var(--accent);
 }
 
-/* Markdown Article Typography within Worklog */
+/* Prose Markdown Typography */
 .prose-content {
   font-size: 0.95rem;
   line-height: 1.7;
@@ -441,23 +620,23 @@ html.dark .log-item.is-open {
 }
 
 .prose-content h2 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  margin: 1.75rem 0 0.75rem;
+  margin: 1.5rem 0 0.65rem;
   color: var(--text-main);
 }
 
 .prose-content h3 {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  margin: 1.25rem 0 0.5rem;
+  margin: 1.15rem 0 0.45rem;
   color: var(--text-main);
 }
 
 .prose-content p {
-  margin-bottom: 1rem;
+  margin-bottom: 0.95rem;
   color: var(--text-muted);
 }
 
@@ -467,17 +646,17 @@ html.dark .log-item.is-open {
 }
 
 .prose-content ul, .prose-content ol {
-  margin: 0.75rem 0 1rem 1.25rem;
+  margin: 0.65rem 0 0.95rem 1.25rem;
   color: var(--text-muted);
 }
 
 .prose-content li {
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
 }
 
 .prose-content blockquote {
-  margin: 1.25rem 0;
-  padding: 0.75rem 1rem;
+  margin: 1.15rem 0;
+  padding: 0.65rem 1rem;
   border-left: 3px solid var(--accent);
   background: var(--bg-surface);
   border-radius: 0 4px 4px 0;
@@ -489,18 +668,18 @@ html.dark .log-item.is-open {
   font-family: var(--font-mono);
   font-size: 0.85em;
   background: var(--code-inline-bg);
-  padding: 0.15rem 0.4rem;
+  padding: 0.15rem 0.35rem;
   border-radius: 4px;
   color: var(--code-inline-text);
   border: 1px solid var(--border-subtle);
 }
 
 .prose-content pre {
-  margin: 1.25rem 0;
+  margin: 1.15rem 0;
   background: var(--code-bg);
   color: var(--code-text);
   border-radius: 6px;
-  padding: 1rem 1.25rem;
+  padding: 0.95rem 1.15rem;
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -517,40 +696,30 @@ html.dark .log-item.is-open {
   color: inherit;
 }
 
-.prose-content table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1.5rem 0;
-  font-size: 0.875rem;
-}
-
-.prose-content th, .prose-content td {
-  padding: 0.55rem 0.85rem;
-  border: 1px solid var(--border-subtle);
-  text-align: left;
-}
-
-.prose-content th {
-  background: var(--bg-surface);
-  font-weight: 600;
-  color: var(--text-main);
-}
-
 /* Footer */
-.worklog-footer {
+.site-footer {
   margin-top: auto;
   border-top: 1px solid var(--border-subtle);
   padding: 2rem 0;
-  font-size: 0.8rem;
-  color: var(--text-faint);
 }
 
 .footer-inner {
+  max-width: 42rem;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-faint);
+}
+
+@media (min-width: 1024px) {
+  .footer-inner {
+    max-width: 56rem;
+  }
 }
 
 .footer-links {
@@ -567,7 +736,7 @@ html.dark .log-item.is-open {
   color: var(--text-main);
 }
 
-/* Responsive */
+/* Mobile Tweaks */
 @media (max-width: 640px) {
   .entries-list {
     padding-left: 1.25rem;
@@ -587,6 +756,5 @@ html.dark .log-item.is-open {
   .log-summary-right {
     width: 100%;
     justify-content: space-between;
-    margin-top: 0.25rem;
   }
 }
