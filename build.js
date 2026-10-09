@@ -60,12 +60,13 @@ function getHeaderHtml(rootPrefix = '') {
     <div class="worklog-container">
       <div class="header-inner">
         <a href="${homeLink}" class="header-brand">
-          <span>brokoli.dev</span>
-          <span style="color: var(--text-faint);">/</span>
-          <span class="badge-log">worklog</span>
+          <span>brokoli<span style="color: var(--accent);">.dev</span></span>
         </a>
 
         <div class="header-actions">
+          <button type="button" id="toggle-all-btn" class="toggle-all-btn">
+            Expand All
+          </button>
           <a href="https://brokolidev.com" target="_blank" rel="noopener noreferrer" class="btn-ghost">
             <span>Portfolio</span>
             <i class="fas fa-arrow-up-right-from-square text-xs" style="opacity: 0.7;"></i>
@@ -207,8 +208,8 @@ async function build() {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Worklog — brokoli.dev</title>
-  <meta name="description" content="Engineering worklog and architectural retrospective by Ted Choi. Chronological development notes with expandable timeline entries.">
+  <title>brokoli.dev</title>
+  <meta name="description" content="Development logs and architectural notes by Ted Choi.">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -218,33 +219,9 @@ async function build() {
 <body>
   ${getHeaderHtml('')}
 
-  <main class="worklog-container">
-    <!-- Intro / Stats Bar -->
-    <section class="worklog-intro">
-      <h1 class="intro-title">Worklog</h1>
-      <p class="intro-desc">
-        Chronological records of architectural decisions, systems development, and engineering retrospect. Click any entry to expand details.
-      </p>
-
-      <div class="intro-stats-bar">
-        <div class="stat-item">
-          <span>Entries:</span>
-          <span class="stat-highlight">${posts.length}</span>
-          <span style="color: var(--border-default); margin: 0 0.4rem;">|</span>
-          <span>Latest update:</span>
-          <span class="stat-highlight">${latestDate}</span>
-        </div>
-
-        <div class="controls-bar">
-          <button type="button" id="toggle-all-btn" class="toggle-all-btn">
-            Expand All
-          </button>
-        </div>
-      </div>
-    </section>
-
+  <main class="worklog-container" style="padding-top: 2.25rem;">
     <!-- Timeline Sections by Year -->
-    <section class="worklog-timeline">
+    <section class="worklog-timeline" style="padding-top: 0;">
       ${sortedYears
         .map(
           (year) => `

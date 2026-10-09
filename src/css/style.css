@@ -194,63 +194,11 @@ html:not(.dark) .worklog-header {
   background: var(--bg-surface-hover);
 }
 
-/* Hero / Log Summary Bar */
-.worklog-intro {
-  padding: 3rem 0 2rem;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.intro-title {
-  font-size: 1.85rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--text-main);
-  margin-bottom: 0.5rem;
-}
-
-.intro-desc {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  max-width: 620px;
-  line-height: 1.6;
-}
-
-.intro-stats-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px dashed var(--border-subtle);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--text-faint);
-  flex-wrap: wrap;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.stat-highlight {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.controls-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .toggle-all-btn {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
+  padding: 0.3rem 0.65rem;
+  border-radius: 5px;
   border: 1px solid var(--border-subtle);
   background: var(--bg-surface);
   color: var(--text-muted);
@@ -261,6 +209,7 @@ html:not(.dark) .worklog-header {
 .toggle-all-btn:hover {
   color: var(--text-main);
   border-color: var(--border-default);
+  background: var(--bg-surface-hover);
 }
 
 /* Timeline Layout */
