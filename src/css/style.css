@@ -776,6 +776,17 @@ html.dark .log-item.is-open {
   color: inherit;
 }
 
+.prose-content img {
+  max-width: 100%;
+  width: auto;
+  max-height: 480px;
+  display: block;
+  margin: 1.5rem auto;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
 /* Footer */
 .site-footer {
   margin-top: auto;
