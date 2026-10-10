@@ -37,16 +37,16 @@ const DIST_DIR = path.join(__dirname, 'dist');
 const DIST_POSTS_DIR = path.join(DIST_DIR, 'posts');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
-// Google Analytics Tag (gtag.js)
+// Google Analytics Tag (gtag.js) - Unified brokolidev.com Property
 const GA_TAG_HTML = `
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-298RY09MR6"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KR5V5X1NT"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-298RY09MR6');
+    gtag('config', 'G-0KR5V5X1NT');
   </script>`;
 
 // Helper: Common Favicons & Web Manifest
