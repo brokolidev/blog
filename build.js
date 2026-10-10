@@ -181,6 +181,9 @@ function getHeaderHtml(rootPrefix = '') {
           <a href="${rootPrefix ? rootPrefix + 'index.html' : '/'}" class="nav-tab-active">
             <span>Blog</span>
           </a>
+          <a href="https://history.brokolidev.com" class="nav-tab-inactive">
+            <span>History</span>
+          </a>
 
           <!-- Theme Toggle -->
           <button type="button" id="theme-toggle" aria-label="Toggle theme" class="theme-btn">
