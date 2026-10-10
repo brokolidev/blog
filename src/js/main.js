@@ -74,15 +74,16 @@
     function checkHash() {
       const hash = window.location.hash.replace(/^#/, '');
       if (!hash) {
-        // By default, open the first/latest entry
-        if (logItems.length > 0) {
-          logItems[0].classList.add('is-open');
-        }
+        // By default, open ONLY the first/latest entry and close the rest
+        logItems.forEach((item, idx) => {
+          item.classList.toggle('is-open', idx === 0);
+        });
         return;
       }
 
       const target = document.querySelector(`.log-item[data-slug="${hash}"]`);
       if (target) {
+        logItems.forEach((item) => item.classList.remove('is-open'));
         target.classList.add('is-open');
         setTimeout(() => {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });

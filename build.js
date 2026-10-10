@@ -529,8 +529,8 @@ async function build() {
             <div class="entries-list">
               ${yearGroups[year]
                 .map(
-                  (post) => `
-              <div class="log-item" data-slug="${post.slug}">
+                  (post, postIdx) => `
+              <div class="log-item${yearIdx === 0 && postIdx === 0 ? ' is-open' : ''}" data-slug="${post.slug}">
                 <div class="log-summary">
                   <div class="log-summary-left">
                     <span class="log-date">${post.dateMeta.monthDay} <span style="font-size: 0.72rem; opacity: 0.75;">${post.dateMeta.weekday}</span></span>
