@@ -175,8 +175,8 @@ function getHeaderHtml(rootPrefix = '') {
 
         <!-- Navigation Links & Theme Toggle -->
         <nav class="header-nav">
-          <a href="https://brokolidev.com" class="nav-tab-inactive">
-            <span>Profile</span>
+          <a href="https://brokolidev.com/utils" class="nav-tab-inactive">
+            <span class="nav-tab-with-icon"><span>Utils</span><span class="nav-icon-bolt">⚡</span></span>
           </a>
           <a href="${rootPrefix ? rootPrefix + 'index.html' : '/'}" class="nav-tab-active">
             <span>Blog</span>
