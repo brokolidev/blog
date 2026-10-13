@@ -37,6 +37,8 @@
 
   // --- 2. Worklog Accordion Engine ---
   function initAccordion() {
+    if (!document.querySelector('.worklog-timeline')) return;
+
     const logItems = document.querySelectorAll('.log-item');
     const toggleAllBtn = document.getElementById('toggle-all-btn');
 
@@ -70,9 +72,11 @@
       });
     }
 
-    // Auto-open from URL Hash on load
+    // Auto-open from URL Hash or ?post= query param on load
     function checkHash() {
-      const hash = window.location.hash.replace(/^#/, '');
+      const params = new URLSearchParams(window.location.search);
+      const querySlug = params.get('post') || '';
+      const hash = window.location.hash.replace(/^#/, '') || querySlug;
       if (!hash) {
         // By default, open ONLY the first/latest entry and close the rest
         logItems.forEach((item, idx) => {
@@ -100,14 +104,26 @@
     const permalinkBtns = document.querySelectorAll('.log-permalink-btn');
     permalinkBtns.forEach((btn) => {
       btn.addEventListener('click', async (e) => {
+        e.preventDefault();
         e.stopPropagation();
         const slug = btn.getAttribute('data-slug');
-        const url = `${window.location.origin}${window.location.pathname}#${slug}`;
+        if (!slug) return;
+
+        const baseOrigin =
+          window.location.origin && window.location.origin !== 'null'
+            ? window.location.origin
+            : 'https://blog.brokolidev.com';
+        const currentLang = document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'ko';
+        const langQuery = currentLang === 'en' ? '?lang=en' : '';
+        const url = `${baseOrigin}/posts/${slug}.html${langQuery}`;
 
         try {
           await navigator.clipboard.writeText(url);
           const originalText = btn.innerHTML;
-          btn.innerHTML = '<i class="fas fa-check" style="color: #2dd4bf;"></i> Copied!';
+          const isIconOnly = btn.classList.contains('log-summary-link-btn');
+          btn.innerHTML = isIconOnly
+            ? '<i class="fas fa-check" style="color: #2dd4bf;"></i>'
+            : '<i class="fas fa-check" style="color: #2dd4bf;"></i> Copied!';
           setTimeout(() => {
             btn.innerHTML = originalText;
           }, 2000);

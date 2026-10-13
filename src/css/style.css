@@ -684,23 +684,37 @@ html.dark .log-item.is-open {
   font-family: var(--font-mono);
 }
 
-.log-permalink-btn {
+.log-permalink-btn,
+.log-permalink-open {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
   color: var(--text-muted);
   text-decoration: none;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.log-permalink-btn:hover {
+.log-permalink-btn:hover,
+.log-permalink-open:hover {
   color: var(--accent);
   border-color: var(--accent);
+}
+
+.log-summary-link-btn {
+  padding: 0.2rem 0.42rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.log-summary:hover .log-summary-link-btn {
+  opacity: 1;
 }
 
 /* Prose Markdown Typography */

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full antialiased dark" data-lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Primary Meta Tags -->
+  <title class="lang-ko">호프 - 나홍진 - Blog - brokolidev</title>
+  <meta name="title" content="호프 - 나홍진 - Blog - brokolidev">
+  <meta name="description" content="영화가 끝나고 나서야 3부작이라는 사실을 알았다. 긴박한 상황 속에서도 블랙코미디적 위트로 몰입감을 이끌어 가는 나홍진 감독의 신작 《호프》 감상.">
+  <meta name="keywords" content="Review, Movie, Sci-Fi, Thriller, Review, brokolidev, Engineering Worklog, Ted Choi">
+  <meta name="author" content="Ted Choi">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://blog.brokolidev.com/posts/hope-na-hong-jin.html">
+
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="brokolidev">
+  <meta property="og:title" content="호프 - 나홍진 - Blog - brokolidev">
+  <meta property="og:description" content="영화가 끝나고 나서야 3부작이라는 사실을 알았다. 긴박한 상황 속에서도 블랙코미디적 위트로 몰입감을 이끌어 가는 나홍진 감독의 신작 《호프》 감상.">
+  <meta property="og:url" content="https://blog.brokolidev.com/posts/hope-na-hong-jin.html">
+  <meta property="og:image" content="https://blog.brokolidev.com/img/posts/hope-poster-1.png">
+  <meta property="article:published_time" content="2026-10-13">
+  <meta property="article:author" content="Ted Choi">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="호프 - 나홍진 - Blog - brokolidev">
+  <meta name="twitter:description" content="영화가 끝나고 나서야 3부작이라는 사실을 알았다. 긴박한 상황 속에서도 블랙코미디적 위트로 몰입감을 이끌어 가는 나홍진 감독의 신작 《호프》 감상.">
+  <meta name="twitter:image" content="https://blog.brokolidev.com/img/posts/hope-poster-1.png">
+  <meta name="twitter:creator" content="@brokolidev">
+
+  
+  <!-- Favicons & Manifest -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon_io/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../img/favicon_io/apple-touch-icon.png">
+  <link rel="manifest" href="../img/favicon_io/site.webmanifest">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=20261013b">
+  
+  <style id="bilingual-guard-style">
+    /* Show ONLY active language, never both */
+    html[data-lang="ko"] .lang-en,
+    html:not([data-lang="en"]) .lang-en {
+      display: none !important;
+    }
+    html[data-lang="en"] .lang-ko {
+      display: none !important;
+    }
+  </style>
+  
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var queryLang = (urlParams.get('lang') || '').toLowerCase();
+    var savedLang = localStorage.getItem('lang');
+    var activeLang = 'ko';
+    if (queryLang === 'ko' || queryLang === 'en') {
+      activeLang = queryLang;
+    } else if (savedLang === 'ko' || savedLang === 'en') {
+      activeLang = savedLang;
+    } else {
+      var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+      if (navLang && !navLang.startsWith('ko') && navLang.startsWith('en')) {
+        activeLang = 'en';
+      }
+    }
+    document.documentElement.setAttribute('data-lang', activeLang);
+
+    // Global fail-safe language toggle (instant execution, zero cache-lag, no double toggle)
+    window.toggleAppLanguage = function (e) {
+      if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+      }
+      var html = document.documentElement;
+      var cur = html.getAttribute('data-lang') === 'en' ? 'en' : 'ko';
+      var next = cur === 'ko' ? 'en' : 'ko';
+      html.setAttribute('data-lang', next);
+      try {
+        localStorage.setItem('lang', next);
+      } catch (err) {}
+    };
+  </script>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "호프 - 나홍진",
+    "datePublished": "2026-10-13",
+    "description": "영화가 끝나고 나서야 3부작이라는 사실을 알았다. 긴박한 상황 속에서도 블랙코미디적 위트로 몰입감을 이끌어 가는 나홍진 감독의 신작 《호프》 감상.",
+    "image": "https://blog.brokolidev.com/img/posts/hope-poster-1.png",
+    "url": "https://blog.brokolidev.com/posts/hope-na-hong-jin.html",
+    "author": {
+      "@type": "Person",
+      "name": "Ted Choi",
+      "url": "https://brokolidev.com"
+    }
+  }
+  </script>
+
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KR5V5X1NT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-0KR5V5X1NT');
+  </script>
+</head>
+<body>
+  
+  <!-- Ambient Background Light Effects (Identical to brokolidev.com) -->
+  <div class="ambient-glow" aria-hidden="true">
+    <div class="ambient-blob-1"></div>
+    <div class="ambient-blob-2"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="header-outer">
+      <div class="header-inner">
+        <!-- Brand / Logo -->
+        <a href="https://brokolidev.com" class="header-brand">
+          <span>brokoli<span class="text-accent">.dev</span></span>
+        </a>
+
+        <!-- Navigation Links & Theme Toggle -->
+        <nav class="header-nav">
+          <a href="https://brokolidev.com/utils" class="nav-tab-inactive">
+            <span class="nav-tab-with-icon"><span>Utils</span><span class="nav-icon-bolt">⚡</span></span>
+          </a>
+          <a href="../index.html" class="nav-tab-active">
+            <span>Blog</span>
+          </a>
+          <a href="https://history.brokolidev.com" class="nav-tab-inactive">
+            <span>History</span>
+          </a>
+
+          <!-- Theme Toggle -->
+          <button type="button" id="theme-toggle" aria-label="Toggle theme" class="theme-btn">
+            <i class="fas fa-sun theme-icon-sun"></i>
+            <i class="fas fa-moon theme-icon-moon"></i>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="main-outer">
+      <div class="main-inner">
+        <div class="post-top-nav" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <a href="../index.html" class="nav-tab-active" style="display: inline-flex; gap: 0.4rem;">
+            <i class="fas fa-arrow-left" style="font-size: 0.75rem;"></i>
+            <span>Timeline</span>
+          </a>
+          <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" onclick="toggleAppLanguage(event)" aria-label="Toggle language">
+            <span class="lang-toggle-opt lang-opt-ko">KR</span>
+            <span class="lang-toggle-sep">/</span>
+            <span class="lang-toggle-opt lang-opt-en">EN</span>
+          </button>
+        </div>
+
+        <article class="log-item is-open" style="border: none; background: transparent; box-shadow: none;">
+          <div class="log-meta-strip" style="border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+            <div>
+              <span class="log-date" style="font-size: 0.9rem;">2026-10-13</span>
+              <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
+              <span class="log-tag lang-ko">Review</span>
+              <span class="log-tag lang-en">Review</span>
+              <span style="margin: 0 0.5rem; color: var(--text-faint);">•</span>
+              <span class="lang-ko">1 min</span>
+              <span class="lang-en">1 min</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <button type="button" class="log-permalink-btn" data-slug="hope-na-hong-jin" title="Copy direct link to this post">
+                <i class="fas fa-link"></i> Copy Link
+              </button>
+            </div>
+          </div>
+
+          <h1 class="lang-ko" style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text-main);">
+            호프 - 나홍진
+          </h1>
+          <h1 class="lang-en" style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text-main);">
+            HOPE - Na Hong-jin
+          </h1>
+
+          <div class="prose-content lang-ko">
+            <div class="post-image-grid">
+  <img src="/img/posts/hope-poster-1.png" alt="호프 (HOPE) 포스터 1" />
+  <img src="/img/posts/hope-poster-2.png" alt="호프 (HOPE) 포스터 2" />
+</div>
+
+<p>영화가 끝나고 나서야 이 영화가 3부작이라는 사실을 알았다.</p>
+<p>3부작이라 아쉽다는 얘기는, 그래도 재밌게 봤고 앞으로 나올 이야기가 기대도 되지만 또 그 기다림이 힘들 것임을 알기에 떠오른 생각이겠지.</p>
+<p>중간중간 블랙코미디적인 요소가 많이 섞여 있다. 그래서 생각해 보면 사실 《곡성》에도 그런 요소들이 많이 녹아 있었다. 영화의 스토리나 장르의 특성상 진짜 진지 빨고 만든 영화가 아니면 몰입하기가 어려운데, 중간중간의 그런 위트가 긴박한 상황 속에서도 또 지루하지 않게 극을 잘 이끌어 가는 느낌이었다.</p>
+<p>영화를 다 보고 나서 여러 가지 의문들이 들었지만, 일단은 3부작이라고 하니 말을 아껴야겠다.</p>
+<p>긴 러닝타임이 느껴지지 않을 정도로 상당히 재미있게 보았고, 최근에 해외에서 반응이 좋다는데 많은 사랑을 받아서 2부, 3부도 성공적으로 제작되어 빨리 나왔으면 하는 바람이다.</p>
+<p>그나저나 마지막에 그 조인성은... 혹시 나홍진 감독이 아리 애스터를 좋아하나?</p>
+
+          </div>
+          <div class="prose-content lang-en">
+            
+<div class="ai-disclaimer" role="note">
+  <span class="ai-disclaimer-badge"><i class="fas fa-robot"></i> AI Translated</span>
+  <span class="ai-disclaimer-text">Please note that this post was translated by AI and may feel slightly awkward or unnatural. If you wish to experience the raw, genuine sentiment of my writing, you should probably learn Korean! 😉</span>
+</div>
+<div class="post-image-grid">
+  <img src="/img/posts/hope-poster-1.png" alt="HOPE Poster 1" />
+  <img src="/img/posts/hope-poster-2.png" alt="HOPE Poster 2" />
+</div>
+
+<p>Only after the movie ended did I find out that this film is actually a trilogy.</p>
+<p>Feeling a bit disappointed that it&#39;s a trilogy probably means I genuinely enjoyed it and am looking forward to what comes next—while already knowing how tough the wait is going to be.</p>
+<p>There is a lot of dark comedy woven throughout the film. Thinking back, <em>The Wailing</em> actually had plenty of those elements melted into it as well. Given the nature of the story and genre, it&#39;s hard to stay immersed unless a film is made with dead-serious conviction, yet those flashes of wit in the middle of such breathless tension kept the pacing engaging without ever feeling dull.</p>
+<p>Plenty of questions lingered in my mind after the credits rolled, but since it&#39;s a three-part story, I&#39;ll hold my tongue for now.</p>
+<p>I thoroughly enjoyed it—so much so that I barely felt the long runtime. I hear the overseas reception has been great recently, so I hope it receives plenty of love and that Parts 2 and 3 get greenlit and released soon.</p>
+<p>By the way, that final scene with Zo In-sung at the end... Does Na Hong-jin happen to be a fan of Ari Aster?</p>
+
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 <strong>brokolidev.com</strong> · Ted Choi</p>
+    </div>
+  </footer>
+  <script src="../js/main.js?v=20261013b"></script>
+</body>
+</html>

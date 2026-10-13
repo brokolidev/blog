@@ -35,6 +35,7 @@ marked.setOptions({ renderer });
 const POSTS_DIR = path.join(__dirname, 'content', 'posts');
 const DIST_DIR = path.join(__dirname, 'dist');
 const DIST_POSTS_DIR = path.join(DIST_DIR, 'posts');
+const ROOT_POSTS_DIR = path.join(__dirname, 'posts');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 // Google Analytics Tag (gtag.js) - Unified brokolidev.com Property
@@ -117,7 +118,7 @@ const CRITICAL_LANG_CSS = `
     }
   </style>`;
 
-// Head Initialization Script (Zero-Flash + Instant Fail-Safe Language Toggle)
+// Head Initialization Script (Zero-Flash + Instant Fail-Safe Language Toggle + ?lang= URL param support)
 function getHeadInitScript() {
   return `
   <script>
@@ -127,9 +128,13 @@ function getHeadInitScript() {
       document.documentElement.classList.remove('dark');
     }
 
+    var urlParams = new URLSearchParams(window.location.search);
+    var queryLang = (urlParams.get('lang') || '').toLowerCase();
     var savedLang = localStorage.getItem('lang');
     var activeLang = 'ko';
-    if (savedLang === 'ko' || savedLang === 'en') {
+    if (queryLang === 'ko' || queryLang === 'en') {
+      activeLang = queryLang;
+    } else if (savedLang === 'ko' || savedLang === 'en') {
       activeLang = savedLang;
     } else {
       var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
@@ -226,7 +231,11 @@ async function build() {
   if (fs.existsSync(DIST_POSTS_DIR)) {
     fs.rmSync(DIST_POSTS_DIR, { recursive: true, force: true });
   }
+  if (fs.existsSync(ROOT_POSTS_DIR)) {
+    fs.rmSync(ROOT_POSTS_DIR, { recursive: true, force: true });
+  }
   fs.mkdirSync(DIST_POSTS_DIR, { recursive: true });
+  fs.mkdirSync(ROOT_POSTS_DIR, { recursive: true });
   fs.mkdirSync(path.join(DIST_DIR, 'css'), { recursive: true });
   fs.mkdirSync(path.join(DIST_DIR, 'js'), { recursive: true });
 
@@ -312,6 +321,14 @@ async function build() {
 
   // 1. Generate Individual Standalone Post Pages
   for (const post of pairedPosts) {
+    const imgMatch = (post.ko.html || '').match(/<img[^>]+src="([^"]+)"/i);
+    let ogImage = 'https://brokolidev.com/img/profile.png';
+    if (imgMatch && imgMatch[1]) {
+      ogImage = imgMatch[1].startsWith('http')
+        ? imgMatch[1]
+        : `https://blog.brokolidev.com${imgMatch[1].startsWith('/') ? '' : '/'}${imgMatch[1]}`;
+    }
+
     const postHtml = `<!DOCTYPE html>
 <html lang="en" class="h-full antialiased dark" data-lang="ko">
 <head>
@@ -334,7 +351,7 @@ async function build() {
   <meta property="og:title" content="${post.ko.title} - Blog - brokolidev">
   <meta property="og:description" content="${(post.ko.excerpt || '').replace(/"/g, '&quot;')}">
   <meta property="og:url" content="https://blog.brokolidev.com/posts/${post.slug}.html">
-  <meta property="og:image" content="https://brokolidev.com/img/profile.png">
+  <meta property="og:image" content="${ogImage}">
   <meta property="article:published_time" content="${post.date}">
   <meta property="article:author" content="Ted Choi">
   <meta property="og:locale" content="en_US">
@@ -343,7 +360,7 @@ async function build() {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${post.ko.title} - Blog - brokolidev">
   <meta name="twitter:description" content="${(post.ko.excerpt || '').replace(/"/g, '&quot;')}">
-  <meta name="twitter:image" content="https://brokolidev.com/img/profile.png">
+  <meta name="twitter:image" content="${ogImage}">
   <meta name="twitter:creator" content="@brokolidev">
 
   ${getFaviconHtml('../')}
@@ -355,7 +372,7 @@ async function build() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css?v=20261013a">
+  <link rel="stylesheet" href="../css/style.css?v=20261013b">
   ${CRITICAL_LANG_CSS}
   ${getHeadInitScript()}
 
@@ -367,6 +384,7 @@ async function build() {
     "headline": "${post.ko.title.replace(/"/g, '\\"')}",
     "datePublished": "${post.date}",
     "description": "${(post.ko.excerpt || '').replace(/"/g, '\\"')}",
+    "image": "${ogImage}",
     "url": "https://blog.brokolidev.com/posts/${post.slug}.html",
     "author": {
       "@type": "Person",
@@ -407,6 +425,11 @@ async function build() {
               <span class="lang-ko">${post.ko.readTime}</span>
               <span class="lang-en">${post.en.readTime}</span>
             </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy direct link to this post">
+                <i class="fas fa-link"></i> Copy Link
+              </button>
+            </div>
           </div>
 
           <h1 class="lang-ko" style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text-main);">
@@ -428,11 +451,12 @@ async function build() {
   </main>
 
   ${getFooterHtml()}
-  <script src="../js/main.js?v=20261008c"></script>
+  <script src="../js/main.js?v=20261013b"></script>
 </body>
 </html>`;
 
     fs.writeFileSync(path.join(DIST_POSTS_DIR, `${post.slug}.html`), postHtml, 'utf-8');
+    fs.writeFileSync(path.join(ROOT_POSTS_DIR, `${post.slug}.html`), postHtml, 'utf-8');
   }
 
   // 2. Generate Worklog Timeline Index Page
@@ -477,7 +501,7 @@ async function build() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261013a">
+  <link rel="stylesheet" href="css/style.css?v=20261013b">
   ${CRITICAL_LANG_CSS}
   ${getHeadInitScript()}
 
@@ -533,7 +557,7 @@ async function build() {
               ${yearGroups[year]
                 .map(
                   (post, postIdx) => `
-              <div class="log-item${yearIdx === 0 && postIdx === 0 ? ' is-open' : ''}" data-slug="${post.slug}">
+              <div class="log-item${yearIdx === 0 && postIdx === 0 ? ' is-open' : ''}" id="${post.slug}" data-slug="${post.slug}">
                 <div class="log-summary">
                   <div class="log-summary-left">
                     <span class="log-date">${post.dateMeta.monthDay} <span style="font-size: 0.72rem; opacity: 0.75;">${post.dateMeta.weekday}</span></span>
@@ -549,6 +573,9 @@ async function build() {
                   <div class="log-summary-right">
                     <span class="log-readtime lang-ko">${post.ko.readTime}</span>
                     <span class="log-readtime lang-en">${post.en.readTime}</span>
+                    <button type="button" class="log-permalink-btn log-summary-link-btn" data-slug="${post.slug}" title="Copy direct link to this post" aria-label="Copy direct link">
+                      <i class="fas fa-link"></i>
+                    </button>
                     <i class="fas fa-chevron-down log-chevron"></i>
                   </div>
                 </div>
@@ -562,8 +589,11 @@ async function build() {
                       <span class="lang-en">Tags: ${post.en.tags.map((t) => `#${t}`).join(' ')}</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                      <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy shareable link">
-                        <i class="fas fa-link"></i> Link
+                      <a href="posts/${post.slug}.html" class="log-permalink-open" title="Open standalone post page">
+                        <i class="fas fa-arrow-up-right-from-square"></i> Standalone
+                      </a>
+                      <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy direct link to this post">
+                        <i class="fas fa-link"></i> Copy Link
                       </button>
                     </div>
                   </div>
@@ -588,7 +618,7 @@ async function build() {
   </main>
 
   ${getFooterHtml()}
-  <script src="js/main.js?v=20261008c"></script>
+  <script src="js/main.js?v=20261013b"></script>
 </body>
 </html>`;
 
@@ -596,6 +626,10 @@ async function build() {
   fs.copyFileSync(path.join(__dirname, 'src', 'css', 'style.css'), path.join(DIST_DIR, 'css', 'style.css'));
   fs.copyFileSync(path.join(__dirname, 'src', 'js', 'main.js'), path.join(DIST_DIR, 'js', 'main.js'));
   fs.writeFileSync(path.join(__dirname, 'index.html'), timelineHtml, 'utf-8');
+  fs.mkdirSync(path.join(__dirname, 'css'), { recursive: true });
+  fs.mkdirSync(path.join(__dirname, 'js'), { recursive: true });
+  fs.copyFileSync(path.join(__dirname, 'src', 'css', 'style.css'), path.join(__dirname, 'css', 'style.css'));
+  fs.copyFileSync(path.join(__dirname, 'src', 'js', 'main.js'), path.join(__dirname, 'js', 'main.js'));
 
   // Copy public assets (favicons, manifests, etc.) to dist and root
   copyDirRecursive(PUBLIC_DIR, DIST_DIR);
