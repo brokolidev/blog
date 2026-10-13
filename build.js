@@ -355,7 +355,7 @@ async function build() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css?v=20261008c">
+  <link rel="stylesheet" href="../css/style.css?v=20261013a">
   ${CRITICAL_LANG_CSS}
   ${getHeadInitScript()}
 
@@ -477,7 +477,7 @@ async function build() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261008c">
+  <link rel="stylesheet" href="css/style.css?v=20261013a">
   ${CRITICAL_LANG_CSS}
   ${getHeadInitScript()}
 
