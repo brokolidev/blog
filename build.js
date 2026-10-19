@@ -325,20 +325,13 @@ async function build() {
       const rawUrl = imgMatch[1].startsWith('http')
         ? imgMatch[1]
         : `https://blog.brokolidev.com${imgMatch[1].startsWith('/') ? '' : '/'}${imgMatch[1]}`;
-      const versionTag = (post.date || '20261019').replace(/-/g, '');
+      const versionTag = `${(post.date || '20261019').replace(/-/g, '')}b`;
       return rawUrl.includes('?') ? rawUrl : `${rawUrl}?v=${versionTag}`;
     }
     return 'https://brokolidev.com/img/profile.png';
   }
 
-  let latestPostOgImage = 'https://brokolidev.com/img/profile.png';
-  for (const p of pairedPosts) {
-    const candidate = resolvePostOgImage(p);
-    if (candidate !== 'https://brokolidev.com/img/profile.png') {
-      latestPostOgImage = candidate;
-      break;
-    }
-  }
+  const rootOgImage = 'https://blog.brokolidev.com/img/posts/black-deer-han-kang.png?v=20261019b';
 
   // 1. Generate Individual Standalone Post Pages
   for (const post of pairedPosts) {
@@ -500,15 +493,15 @@ async function build() {
   <meta property="og:title" content="Blog - brokolidev">
   <meta property="og:description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
   <meta property="og:url" content="https://blog.brokolidev.com/">
-  <meta property="og:image" content="${latestPostOgImage}">
-  <meta property="og:image:secure_url" content="${latestPostOgImage}">
+  <meta property="og:image" content="${rootOgImage}">
+  <meta property="og:image:secure_url" content="${rootOgImage}">
   <meta property="og:locale" content="ko_KR">
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Blog - brokolidev">
   <meta name="twitter:description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
-  <meta name="twitter:image" content="${latestPostOgImage}">
+  <meta name="twitter:image" content="${rootOgImage}">
   <meta name="twitter:creator" content="@brokolidev">
 
   ${getFaviconHtml('/')}

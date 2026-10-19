@@ -82,6 +82,10 @@
         logItems.forEach((item, idx) => {
           item.classList.toggle('is-open', idx === 0);
         });
+        const firstSlug = logItems[0] ? logItems[0].getAttribute('data-slug') : '';
+        if (firstSlug) {
+          history.replaceState(null, null, `/posts/${firstSlug}.html`);
+        }
         return;
       }
 
