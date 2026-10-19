@@ -319,15 +319,31 @@ async function build() {
   }
   const sortedYears = Object.keys(yearGroups).sort((a, b) => Number(b) - Number(a));
 
-  // 1. Generate Individual Standalone Post Pages
-  for (const post of pairedPosts) {
-    const imgMatch = (post.ko.html || '').match(/<img[^>]+src="([^"]+)"/i);
-    let ogImage = 'https://brokolidev.com/img/profile.png';
+  function resolvePostOgImage(post) {
+    const imgMatch = ((post.ko && post.ko.html) || (post.en && post.en.html) || '').match(/<img[^>]+src="([^"]+)"/i);
     if (imgMatch && imgMatch[1]) {
-      ogImage = imgMatch[1].startsWith('http')
+      const rawUrl = imgMatch[1].startsWith('http')
         ? imgMatch[1]
         : `https://blog.brokolidev.com${imgMatch[1].startsWith('/') ? '' : '/'}${imgMatch[1]}`;
+      const versionTag = (post.date || '20261019').replace(/-/g, '');
+      return rawUrl.includes('?') ? rawUrl : `${rawUrl}?v=${versionTag}`;
     }
+    return 'https://brokolidev.com/img/profile.png';
+  }
+
+  let latestPostOgImage = 'https://brokolidev.com/img/profile.png';
+  for (const p of pairedPosts) {
+    const candidate = resolvePostOgImage(p);
+    if (candidate !== 'https://brokolidev.com/img/profile.png') {
+      latestPostOgImage = candidate;
+      break;
+    }
+  }
+
+  // 1. Generate Individual Standalone Post Pages
+  for (const post of pairedPosts) {
+    const ogImage = resolvePostOgImage(post);
+    const safeTitleAttr = (post.ko.title || '').replace(/"/g, '&quot;');
 
     const postHtml = `<!DOCTYPE html>
 <html lang="en" class="h-full antialiased dark" data-lang="ko">
@@ -338,27 +354,29 @@ async function build() {
 
   <!-- Primary Meta Tags -->
   <title class="lang-ko">${post.ko.title} - Blog - brokolidev</title>
-  <meta name="title" content="${post.ko.title} - Blog - brokolidev">
+  <meta name="title" content="${safeTitleAttr} - Blog - brokolidev">
   <meta name="description" content="${(post.ko.excerpt || '').replace(/"/g, '&quot;')}">
   <meta name="keywords" content="${[...post.ko.tags, post.ko.category, 'brokolidev', 'Engineering Worklog', 'Ted Choi'].join(', ')}">
   <meta name="author" content="Ted Choi">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://blog.brokolidev.com/posts/${post.slug}.html">
 
-  <!-- Open Graph / Facebook / LinkedIn -->
+  <!-- Open Graph / Facebook / Threads / LinkedIn -->
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="brokolidev">
-  <meta property="og:title" content="${post.ko.title} - Blog - brokolidev">
+  <meta property="og:title" content="${safeTitleAttr} - Blog - brokolidev">
   <meta property="og:description" content="${(post.ko.excerpt || '').replace(/"/g, '&quot;')}">
   <meta property="og:url" content="https://blog.brokolidev.com/posts/${post.slug}.html">
   <meta property="og:image" content="${ogImage}">
+  <meta property="og:image:secure_url" content="${ogImage}">
+  <meta property="og:image:alt" content="${safeTitleAttr}">
   <meta property="article:published_time" content="${post.date}">
   <meta property="article:author" content="Ted Choi">
-  <meta property="og:locale" content="en_US">
+  <meta property="og:locale" content="ko_KR">
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${post.ko.title} - Blog - brokolidev">
+  <meta name="twitter:title" content="${safeTitleAttr} - Blog - brokolidev">
   <meta name="twitter:description" content="${(post.ko.excerpt || '').replace(/"/g, '&quot;')}">
   <meta name="twitter:image" content="${ogImage}">
   <meta name="twitter:creator" content="@brokolidev">
@@ -476,23 +494,24 @@ async function build() {
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://blog.brokolidev.com/">
 
-  <!-- Open Graph / Facebook / LinkedIn -->
+  <!-- Open Graph / Facebook / Threads / LinkedIn -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="brokolidev">
   <meta property="og:title" content="Blog - brokolidev">
   <meta property="og:description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
   <meta property="og:url" content="https://blog.brokolidev.com/">
-  <meta property="og:image" content="https://brokolidev.com/img/profile.png">
-  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="${latestPostOgImage}">
+  <meta property="og:image:secure_url" content="${latestPostOgImage}">
+  <meta property="og:locale" content="ko_KR">
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Blog - brokolidev">
   <meta name="twitter:description" content="Engineering worklog, architecture retrospectives, and development notes by Ted Choi.">
-  <meta name="twitter:image" content="https://brokolidev.com/img/profile.png">
+  <meta name="twitter:image" content="${latestPostOgImage}">
   <meta name="twitter:creator" content="@brokolidev">
 
-  ${getFaviconHtml('')}
+  ${getFaviconHtml('/')}
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://rsms.me/">
@@ -501,7 +520,7 @@ async function build() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261013b">
+  <link rel="stylesheet" href="/css/style.css?v=20261019">
   ${CRITICAL_LANG_CSS}
   ${getHeadInitScript()}
 
@@ -589,7 +608,7 @@ async function build() {
                       <span class="lang-en">Tags: ${post.en.tags.map((t) => `#${t}`).join(' ')}</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                      <a href="posts/${post.slug}.html" class="log-permalink-open" title="Open standalone post page">
+                      <a href="/posts/${post.slug}.html" class="log-permalink-open" title="Open standalone post page">
                         <i class="fas fa-arrow-up-right-from-square"></i> Standalone
                       </a>
                       <button type="button" class="log-permalink-btn" data-slug="${post.slug}" title="Copy direct link to this post">
@@ -618,7 +637,7 @@ async function build() {
   </main>
 
   ${getFooterHtml()}
-  <script src="js/main.js?v=20261013b"></script>
+  <script src="/js/main.js?v=20261019"></script>
 </body>
 </html>`;
 

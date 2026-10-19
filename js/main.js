@@ -57,7 +57,7 @@
         if (!isOpen) {
           const slug = item.getAttribute('data-slug');
           if (slug) {
-            history.replaceState(null, null, `#${slug}`);
+            history.replaceState(null, null, `/posts/${slug}.html`);
           }
         }
       });
@@ -89,6 +89,7 @@
       if (target) {
         logItems.forEach((item) => item.classList.remove('is-open'));
         target.classList.add('is-open');
+        history.replaceState(null, null, `/posts/${hash}.html`);
         setTimeout(() => {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 150);
