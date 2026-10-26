@@ -643,8 +643,10 @@ async function build() {
   fs.copyFileSync(path.join(__dirname, 'src', 'css', 'style.css'), path.join(__dirname, 'css', 'style.css'));
   fs.copyFileSync(path.join(__dirname, 'src', 'js', 'main.js'), path.join(__dirname, 'js', 'main.js'));
 
-  // Copy public assets (favicons, manifests, etc.) to dist and root
+  // Copy public and image assets to dist and root
+  copyDirRecursive(path.join(__dirname, 'img'), path.join(PUBLIC_DIR, 'img'));
   copyDirRecursive(PUBLIC_DIR, DIST_DIR);
+  copyDirRecursive(path.join(__dirname, 'img'), path.join(DIST_DIR, 'img'));
   copyDirRecursive(PUBLIC_DIR, __dirname);
 
   console.log(`✅ Bilingual Worklog build complete! Processed ${pairedPosts.length} entries across ${sortedYears.length} years.`);
